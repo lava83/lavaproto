@@ -7,4 +7,4 @@ lavaproto comes with the following features:
  * smarty 3 as template engine powered by `[ytake/laravel-smarty](https://github.com/ytake/Laravel.Smarty)`
  * plugin management (wip)
 
-** the package is now work in progress and most of the top named features are not implemented yet!**
+**the package is now work in progress and most of the top named features are not implemented yet!**
