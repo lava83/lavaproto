@@ -8,7 +8,10 @@
 
 namespace Lava83\LavaProto\Exceptions;
 
-
+/**
+ * Class LogicException
+ * @package Lava83\LavaProto\Exceptions
+ */
 class LogicException extends \Exception
 {
 

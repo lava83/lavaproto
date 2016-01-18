@@ -8,7 +8,10 @@
 
 namespace Lava83\LavaProto\Exceptions;
 
-
+/**
+ * Class SmartyPluginException
+ * @package Lava83\LavaProto\Exceptions
+ */
 class SmartyPluginException extends \Exception
 {
 

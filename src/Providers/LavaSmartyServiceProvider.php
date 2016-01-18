@@ -2,49 +2,31 @@
 /**
  * Project: lavaproto
  * User: stefanriedel
- * Date: 07.01.16
- * Time: 11:29
+ * Date: 13.01.16
+ * Time: 12:03
  */
 
-namespace Lava83\LavaProto;
+namespace Lava83\LavaProto\Providers;
 
-use Illuminate\Filesystem\Filesystem;
-use Lava83\LavaProto\Exceptions\LogicException;
-use Lava83\LavaProto\View\FileViewFinder;
-use Lava83\LavaProto\View\View;
-use Symfony\Component\Finder\Finder;
+
 use Illuminate\Support\ServiceProvider;
 use Ytake\LaravelSmarty\SmartyCompileServiceProvider;
 use Ytake\LaravelSmarty\SmartyConsoleServiceProvider;
 use Ytake\LaravelSmarty\SmartyServiceProvider;
+use Lava83\LavaProto\View\FileViewFinder;
+use Lava83\LavaProto\View\View;
 
-class LavaProtoServiceProvider extends ServiceProvider
+class LavaSmartyServiceProvider extends ServiceProvider
 {
-    /**
-     * Boot the framework services
-     *
-     * @return void
-     */
-    public function boot() {
-        //
-    }
 
-    /**
-     * Register the framework services
-     *
-     * @throws LogicException
-     * @return void
-     */
+
+
+
     public function register()
     {
-
-        if(in_array(config('cache.default'), ['file', 'database'])) {
-            throw new LogicException('We use tagable caches. PLease dont use file or database as driver!');
-        }
         $this->_registerSmarty();
         $this->_extendViewFactory();
     }
-
 
     /**
      * Register smarty providers
@@ -103,6 +85,4 @@ class LavaProtoServiceProvider extends ServiceProvider
             return $env;
         });
     }
-
-
 }
