@@ -7,7 +7,7 @@
  */
 
 return [
-    'path' => app_path('Plugins'),
+    'path' => base_path('plugins'),
     'namespaces' => [
         'Frontend',
         'Backend',

@@ -10,7 +10,9 @@ namespace Lava83\LavaProto\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
+use Lava83\LavaProto\Core\Plugins\PluginBootstrap;
 use Lava83\LavaProto\Core\Plugins\PluginManager;
+use Lava83\LavaProto\Exceptions\PluginManagerException;
 use Lava83\LavaProto\Facades\PluginManagerFacade;
 use Lava83\LavaProto\Filesystem\Filesystem;
 
@@ -18,13 +20,23 @@ class LavaPluginServiceProvider extends ServiceProvider
 {
 
     /**
+     * @var PluginManager
+     */
+    protected $_pluginmanager;
+
+    /**
      * Boot the framework services
      *
      * @return void
      */
-    public function boot() {
+    public function boot(PluginManager $pluginManager) {
+        /** @var $plugin PluginBootstrap */
+
+        $this->_pluginmanager = $pluginManager;
         $this->_publishConfigs();
         $this->_publishMigrations();
+        $this->_listenOnEvents();
+
     }
 
     public function register()
@@ -73,6 +85,70 @@ class LavaPluginServiceProvider extends ServiceProvider
         });
 
 
+    }
+
+    /**
+     * iterate the plugins in collection
+     */
+    protected function _listenOnEvents()
+    {
+        foreach ($this->_pluginmanager->getCollection() as $plugin) {
+            $this->_preparePlugin($plugin);
+        }
+    }
+
+    /**
+     *
+     * prepare the plugin if is active and subscribe a listener
+     *
+     * @param $plugin
+     * @throws PluginManagerException
+     */
+    protected function _preparePlugin($plugin)
+    {
+        if ($plugin->isActive()) {
+            $subscribes = $plugin->getSubscribes();
+            if (count($subscribes) != 0) {
+                foreach ($subscribes as $event) {
+                    //event class is given
+                    if (strpos($event->listener, '@')) {
+                        $this->_listenOnEventClass($event);
+                    } else {
+                        //event is listen on bootstrap file
+                        $this->_listenOnBootstrapClass($plugin, $event);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $event
+     * @throws PluginManagerException
+     */
+    protected function _listenOnEventClass($event)
+    {
+        list($cls_name, $method_name) = explode('@', $event->listener);
+        if ($cls_name && $method_name && class_exists($cls_name)) {
+            $object = new $cls_name();
+            if (method_exists($object, $method_name)) {
+                //$object->{$method_name}();
+                \Event::listen($event->subscribe, [$object, $method_name]);
+            } else {
+                throw new PluginManagerException(sprintf("Method: '%s' doesnt exists.", $method_name));
+            }
+        } elseif (!class_exists($cls_name)) {
+            throw new PluginManagerException(sprintf("Class: '%s' doesnt exists.", $cls_name));
+        }
+    }
+
+    /**
+     * @param $plugin
+     * @param $event
+     */
+    protected function _listenOnBootstrapClass($plugin, $event)
+    {
+        \Event::listen($event->subscribe, [$plugin, $event->listener]);
     }
 
 }
