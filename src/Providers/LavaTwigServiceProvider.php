@@ -1,53 +1,44 @@
 <?php
 /**
- * Project: lavaproto
+ * Created by PhpStorm.
  * User: stefanriedel
- * Date: 13.01.16
- * Time: 12:03
+ * Date: 03.02.16
+ * Time: 18:52
  */
 
 namespace Lava83\LavaProto\Providers;
 
-
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-use Ytake\LaravelSmarty\SmartyCompileServiceProvider;
-use Ytake\LaravelSmarty\SmartyConsoleServiceProvider;
-use Ytake\LaravelSmarty\SmartyServiceProvider;
+use Lava83\LavaProto\Core\Twig\Loader\Filesystem;
+use Lava83\LavaProto\Core\Twig\TokenParser\ExtendsParent;
 use Lava83\LavaProto\View\FileViewFinder;
 use Lava83\LavaProto\View\View;
+use TwigBridge\Facade\Twig;
 
-class LavaSmartyServiceProvider extends ServiceProvider
+class LavaTwigServiceProvider extends ServiceProvider
 {
 
-
-
+    protected $_aliases = [
+        'Twig' => Twig::class,
+    ];
 
     public function register()
     {
-        $this->_registerSmarty();
-        $this->_extendViewFactory();
+        $this->_registerViewFactory();
+        $this->_registerTwigBridge();
+        $this->_registerTwigExtensions();
+
+
     }
 
-    /**
-     * Register smarty providers
-     *
-     * @return void
-     */
-    protected function _registerSmarty() {
+    protected function _registerTwigExtensions() {
+        \Twig::addTokenParser(new ExtendsParent());
+        $this->app->bindIf('lava83.twig.loader.filesystem', function(){
+            return new Filesystem($this->app['config']['view.paths']);
+        }, true);
+        \Twig::getLoader()->addLoader($this->app['lava83.twig.loader.filesystem']);
 
-        $smarty_plugins_paths = config('ytake-laravel-smarty.plugins_paths');
-        $smarty_plugins_paths[] = __DIR__ . '/../smarty/plugins';
-        \Config::set('ytake-laravel-smarty.plugins_paths', $smarty_plugins_paths);
-
-        $smarty_configs_paths = config('ytake-laravel-smarty.config_paths');
-        $smarty_configs_paths[] = __DIR__ . '/../smarty/config';
-        \Config::set('ytake-laravel-smarty.config_paths', $smarty_configs_paths);
-
-        $this->app->register(SmartyServiceProvider::class);
-        $this->app->register(SmartyConsoleServiceProvider::class);
-        if($this->app->environment() !== 'local') {
-            $this->app->register(SmartyCompileServiceProvider::class);
-        }
     }
 
     /**
@@ -57,7 +48,7 @@ class LavaSmartyServiceProvider extends ServiceProvider
      * @see Lava83\LavaProto\View\View
      * @see Lava83\LavaProto\View\FileViewFinder
      */
-    protected function _extendViewFactory() {
+    protected function _registerViewFactory() {
 
         /**
          * @var \Illuminate\Contracts\Foundation\Application
@@ -84,5 +75,11 @@ class LavaSmartyServiceProvider extends ServiceProvider
             $env->share('app', $app);
             return $env;
         });
+    }
+
+    public function _registerTwigBridge()
+    {
+        $this->app->register(\TwigBridge\ServiceProvider::class);
+        AliasLoader::getInstance($this->_aliases);
     }
 }

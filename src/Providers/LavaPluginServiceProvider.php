@@ -101,7 +101,7 @@ class LavaPluginServiceProvider extends ServiceProvider
      *
      * prepare the plugin if is active and subscribe a listener
      *
-     * @param $plugin
+     * @param $plugin PluginBootstrap
      * @throws PluginManagerException
      */
     protected function _preparePlugin($plugin)
@@ -112,7 +112,7 @@ class LavaPluginServiceProvider extends ServiceProvider
                 foreach ($subscribes as $event) {
                     //event class is given
                     if (strpos($event->listener, '@')) {
-                        $this->_listenOnEventClass($event);
+                        $this->_listenOnEventClass($event, $plugin);
                     } else {
                         //event is listen on bootstrap file
                         $this->_listenOnBootstrapClass($plugin, $event);
@@ -126,11 +126,11 @@ class LavaPluginServiceProvider extends ServiceProvider
      * @param $event
      * @throws PluginManagerException
      */
-    protected function _listenOnEventClass($event)
+    protected function _listenOnEventClass($event, PluginBootstrap $plugin = null)
     {
         list($cls_name, $method_name) = explode('@', $event->listener);
         if ($cls_name && $method_name && class_exists($cls_name)) {
-            $object = new $cls_name();
+            $object = new $cls_name($plugin);
             if (method_exists($object, $method_name)) {
                 //$object->{$method_name}();
                 \Event::listen($event->subscribe, [$object, $method_name]);

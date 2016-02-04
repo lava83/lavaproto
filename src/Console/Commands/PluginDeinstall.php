@@ -60,6 +60,9 @@ class PluginDeinstall extends Command
     {
         $this->_pluginmanager->init();
         $plugin = $this->_pluginmanager->getCollection()->get($this->argument('plugin'));
+        if($plugin->isActive()) {
+            $plugin->deactivate();
+        }
         $plugin->deinstall();
         $line = <<<EOF
 <comment>{$plugin->getName()} deinstalled success</comment>

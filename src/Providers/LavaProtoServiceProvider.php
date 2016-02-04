@@ -8,11 +8,13 @@
 
 namespace Lava83\LavaProto\Providers;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Lava83\LavaProto\Exceptions\LogicException;
 
 class LavaProtoServiceProvider extends ServiceProvider
 {
+
     /**
      * Register the framework services
      *
@@ -24,10 +26,13 @@ class LavaProtoServiceProvider extends ServiceProvider
         if(in_array(config('cache.default'), ['file', 'database'])) {
             throw new LogicException('We use tagable caches. PLease dont use file or database as driver!');
         }
-        $this->app->register(LavaSmartyServiceProvider::class);
+
+        $this->app->register(LavaTwigServiceProvider::class);
         $this->app->register(LavaPluginServiceProvider::class);
         $this->app->register(LavaConsoleServiceProvider::class);
+
     }
+
 
 
 }

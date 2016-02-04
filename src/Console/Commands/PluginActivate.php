@@ -60,11 +60,19 @@ class PluginActivate extends Command
     {
         $this->_pluginmanager->init();
         $plugin = $this->_pluginmanager->getCollection()->get($this->argument('plugin'));
-        $plugin->activate();
-        $line = <<<EOF
+        if($plugin !== null) {
+            if(!$plugin->isInstalled()) {
+                $plugin->install();
+            }
+            $plugin->activate();
+            $line = <<<EOF
 <comment>{$plugin->getName()} activated success</comment>
 EOF;
-        $this->line($line);
+            $this->line($line);
+        } else {
+            $this->error(sprintf('The plugin: %s doesnt exists.', $this->argument('plugin')));
+        }
+
     }
 
 }

@@ -73,6 +73,16 @@ class PluginBootstrap
     protected $_source;
 
     /**
+     * @var string
+     */
+    protected $_path;
+
+    /**
+     * @var \Illuminate\Foundation\Application|mixed
+     */
+    protected $_app;
+
+    /**
      *
      * the constructor
      *
@@ -82,6 +92,7 @@ class PluginBootstrap
     public function __construct($name, $info = null)
     {
 
+        $this->_app = app();
         $this->_name = $name;
         $this->_namespace = substr(get_class($this), 0, strrpos(get_class($this), '\\'));
 
@@ -292,14 +303,7 @@ class PluginBootstrap
      */
     public function activate()
     {
-        if ($this->isInstalled()) {
-            $this->_activate();
-        } else {
-            \DB::transaction(function () {
-                $this->_install();
-                $this->_activate();
-            });
-        }
+       $this->_activate();
     }
 
     /**
@@ -347,14 +351,7 @@ class PluginBootstrap
      */
     public function deinstall()
     {
-        if ($this->isActive()) {
-            \DB::transaction(function () {
-                $this->_deactivate();
-                $this->_deinstall();
-            });
-        } else {
-            $this->_deinstall();
-        }
+        $this->_deinstall();
     }
 
     /**
@@ -443,6 +440,36 @@ class PluginBootstrap
             return $info[$key];
         }
         return null;
+    }
+
+    /**
+     *
+     * gets the plugin path
+     *
+     * @return string
+     */
+    public function getPath() {
+        if(empty($this->_path)) {
+            $ret = '';
+            $reflection = new \ReflectionClass($this);
+
+            if ($fileName = $reflection->getFileName()) {
+                $ret = dirname($fileName) . DIRECTORY_SEPARATOR;
+            }
+
+            $this->_path = $ret;
+
+        }
+
+        return $this->_path;
+    }
+
+    public function addTemplatePath($path, $namespace = null) {
+        $this->_app['view']->prependLocation($path);
+        if($namespace == null) {
+            $namespace = $this->getName();
+        }
+        $this->_app['lava83.twig.loader.filesystem']->addPath($path, $namespace);
     }
 
 }

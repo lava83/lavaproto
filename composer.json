@@ -4,8 +4,7 @@
     "type": "Framework",
     "require": {
         "laravel/framework": "5.2.*",
-        "ytake/laravel-smarty": "^2.1",
-        "bosnadev/repositories": "^0.9.0"
+        "rcrowe/twigbridge": "^0.9.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -13,6 +12,11 @@
         "phpunit/phpunit": "~4.0",
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "license": "gplv3",
     "authors": [
