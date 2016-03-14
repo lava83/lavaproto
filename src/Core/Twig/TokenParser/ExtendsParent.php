@@ -17,14 +17,6 @@ class ExtendsParent extends \Twig_TokenParser
 
     static $_usedPaths = [];
 
-    /*public function __construct()
-    {
-        if(empty(static::$_paths)) {
-            //to iterate the array correct i reverse it
-            static::$_paths = array_reverse(app()['lava83.twig.loader.filesystem']->getAllPaths());
-        }
-    }*/
-
     public function getTag()
     {
         return 'extendsparent';
