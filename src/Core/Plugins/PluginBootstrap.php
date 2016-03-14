@@ -409,7 +409,7 @@ class PluginBootstrap
         $plugin_subscribe_data = [
             'subscribe' => $event,
             'listener' => $listener,
-            'position' => $position
+            'position' => (is_null($position)) ? 0 : $position
         ];
 
         $this->_model->subscribes()->create($plugin_subscribe_data);

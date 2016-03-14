@@ -62,20 +62,5 @@ class ExtendsParent extends \Twig_TokenParser
 
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
-        /*
-
-
-                dd($this->parser->getExpressionParser()->parseExpression());
-
-
-
-                foreach($paths as $path_namespace => $path) {
-                    if($path_namespace == $namespace) {
-                        static::$_usedPaths[] = $namespace;
-                        continue;
-                    }
-
-                }*/
-
     }
 }
