@@ -11,14 +11,17 @@ namespace Lava83\LavaProto\Providers;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Lava83\LavaProto\Exceptions\LogicException;
+use Lava83\LavaProto\Repositories\UserRepository;
+use Lava83\LavaProto\Repositories\UserRepositoryEloquent;
 use Prettus\Repository\Providers\RepositoryServiceProvider;
 
 class LavaProtoServiceProvider extends ServiceProvider
 {
 
-    public function boot() {
+    public function boot()
+    {
         $this->publishes([
-            __DIR__.'/../../config/lava83-repositories.php' => config_path('lava83-repositories.php'),
+            __DIR__ . '/../../config/lava83-repositories.php' => config_path('lava83-repositories.php'),
         ]);
     }
 
@@ -30,19 +33,21 @@ class LavaProtoServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if(in_array(config('cache.default'), ['file', 'database'])) {
+        if (in_array(config('cache.default'), ['file', 'database'])) {
             throw new LogicException('We use tagable caches. PLease dont use file or database as driver!');
         }
 
         $this->app->register(LavaTwigServiceProvider::class);
         $this->app->register(LavaPluginServiceProvider::class);
         $this->app->register(LavaConsoleServiceProvider::class);
+        /** @todo LavaRepositoryServiceProvider */
         $this->app->register(RepositoryServiceProvider::class);
         $this->_bindRepositories();
     }
 
-    protected function _bindRepositories() {
-        if(config('lava83-repositories.auto-bind-eloquent')) {
+    protected function _bindRepositories()
+    {
+        if (config('lava83-repositories.auto-bind-eloquent')) {
             $repositoriesPath = config('repository.generator.basePath') . DIRECTORY_SEPARATOR . config('repository.generator.paths.repositories');
             $rootNamespace = config('repository.generator.rootNamespace');
             if ($repositories = glob($repositoriesPath . DIRECTORY_SEPARATOR . '*Repository.php')) {
@@ -56,8 +61,8 @@ class LavaProtoServiceProvider extends ServiceProvider
                 }
             }
         }
+        $this->app->bind(UserRepository::class, UserRepositoryEloquent::class);
     }
-
 
 
 }
