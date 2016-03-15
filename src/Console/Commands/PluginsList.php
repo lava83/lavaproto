@@ -42,7 +42,7 @@ class PluginsList extends Command
     {
         /** @var $plugin PluginBootstrap */
         \PluginManager::sync();
-        if ($collection = \PluginManager::getCollection()) {
+        if ($collection = \PluginManager::getCollection() and count($collection) > 0) {
             foreach ($collection as $plugin) {
 
                 $active = ($plugin->isActive()) ? 'yes' : 'no';
