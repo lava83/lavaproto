@@ -95,8 +95,10 @@ class View extends ViewFactory
      * @see FileViewFinder::prependLocation
      * @param $location
      */
-    public function prependLocation($location) {
+    public function prependLocation($location, $namespace = null) {
+        //app('smarty.view')->getSmarty()->prependDirectory($location);
         $this->finder->prependLocation($location);
+
     }
 
 }
