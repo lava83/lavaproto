@@ -8,7 +8,10 @@
 
 namespace Lava83\LavaProto\Exceptions;
 
-
+/**
+ * Class ViewException
+ * @package Lava83\LavaProto\Exceptions
+ */
 class ViewException extends \Exception
 {
 
