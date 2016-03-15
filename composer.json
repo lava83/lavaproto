@@ -4,7 +4,8 @@
     "type": "Framework",
     "require": {
         "laravel/framework": "5.2.*",
-        "rcrowe/twigbridge": "^0.9.1"
+        "rcrowe/twigbridge": "^0.9.1",
+        "prettus/l5-repository": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

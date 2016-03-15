@@ -1,5 +1,10 @@
 <?php
 /**
+ * Copyright (c) 2016. Stefan Riedel <sr_at_srit83.de>
+ * This software is licensed in gplv3 http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+
+/**
  * Project: lavaproto
  * User: stefanriedel
  * Date: 19.01.16
@@ -9,11 +14,13 @@
 namespace Lava83\LavaProto\Controller;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\Factory;
 use Lava83\LavaProto\View\View;
+use Prettus\Repository\Contracts\RepositoryInterface;
 
 abstract class Controller extends BaseController
 {
@@ -25,9 +32,28 @@ abstract class Controller extends BaseController
 
     protected $_method;
 
+    /**
+     * @var View
+     */
     protected $_view;
 
+    /**
+     * @var Response
+     */
     protected $_response;
+
+    /**
+     * @var RepositoryInterface
+     */
+    protected $_repository;
+
+    /**
+     * @return RepositoryInterface
+     */
+    public function getRepository()
+    {
+        return $this->_repository;
+    }
 
     /**
      * Constructor is fired two events Controller_Init_Pre and CalledController_Init_Pre
