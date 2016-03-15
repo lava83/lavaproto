@@ -38,25 +38,30 @@ class PluginsList extends Command
      *
      * @return void
      */
-    public function fire() {
+    public function fire()
+    {
         /** @var $plugin PluginBootstrap */
         \PluginManager::sync();
-        $collection = \PluginManager::getCollection();
-        foreach($collection as $plugin) {
+        if ($collection = \PluginManager::getCollection()) {
+            foreach ($collection as $plugin) {
 
-            $active = ($plugin->isActive()) ? 'yes' : 'no';
-            $installed = ($plugin->isInstalled()) ? 'yes' : 'no';
-            $line = <<<EOF
+                $active = ($plugin->isActive()) ? 'yes' : 'no';
+                $installed = ($plugin->isInstalled()) ? 'yes' : 'no';
+                $line = <<<EOF
 <comment>{$plugin->getName()}:</comment>
     <info>version: {$plugin->getVersion()}</info>
     <info>description: {$plugin->getDescription()}</info>
     <info>active: {$active}</info>
     <info>installed: {$installed}</info>
 EOF;
+                $this->line($line);
+            }
+        } else {
+            $line = <<<EVO
+<info>no plugins avalaible</info>
+EVO;
             $this->line($line);
         }
-
-
 
 
         /*$this->line(<<<EOF

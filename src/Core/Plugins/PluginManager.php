@@ -44,7 +44,7 @@ class PluginManager
      * @param array $path
      * @param array $namespaces
      */
-    public function __construct($path = null, array $namespaces = [])
+    public function __construct($path = null, $namespaces = [])
     {
         $this->setPath($path);
         $this->addNamespaces($namespaces);
@@ -58,9 +58,11 @@ class PluginManager
      * @param array $namespaces
      * @return PluginManager
      */
-    public function addNamespaces(array $namespaces)
+    public function addNamespaces($namespaces)
     {
-        $this->_namespaces = array_merge($this->_namespaces, $namespaces);
+        if($namespaces) {
+            $this->_namespaces = array_merge($this->_namespaces, $namespaces);
+        }
         return $this;
     }
 
