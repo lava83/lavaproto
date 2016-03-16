@@ -62,10 +62,10 @@ abstract class Controller extends BaseController
         $this->_view = view();
         $this->_controller = get_called_class();
         $args = [
-            $this
+            'subject' => $this
         ];
-        \Event::fire(__CLASS__ . '_Init_Post', $args);
-        \Event::fire($this->_controller . '_Init_Post', $args);
+        notify(__CLASS__ . '_Init_Post', $args);
+        notify($this->_controller . '_Init_Post', $args);
     }
 
     /**
@@ -81,18 +81,18 @@ abstract class Controller extends BaseController
     {
         $this->_method = $method;
         $args = [
-            $this
+            'subject' => $this
         ];
 
-        \Event::fire(__CLASS__ . '_Pre', $args);
-        \Event::fire($this->_controller . '_Pre', $args);
-        \Event::fire($this->_controller . '_Pre::' . $this->_method, $args);
+        notify(__CLASS__ . '_Pre', $args);
+        notify($this->_controller . '_Pre', $args);
+        notify($this->_controller . '_Pre::' . $this->_method, $args);
 
         $this->_response = parent::callAction($method, $parameters);
 
-        \Event::fire(__CLASS__ . '_Post', $args);
-        \Event::fire($this->_controller . '_Post', $args);
-        \Event::fire($this->_controller . '_Post::' . $this->_method, $args);
+        notify(__CLASS__ . '_Post', $args);
+        notify($this->_controller . '_Post', $args);
+        notify($this->_controller . '_Post::' . $this->_method, $args);
 
         return $this->_response;
     }

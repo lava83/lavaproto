@@ -29,6 +29,13 @@ class Args
     }
 
     /**
+     * getter of the main subject of an event
+     */
+    public function getSubject() {
+        return (isset($this->_args['subject'])) ? $this->_args['subject'] : null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     function __call($name, $arguments)
