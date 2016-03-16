@@ -11,7 +11,7 @@
  * Time: 14:24
  */
 
-namespace Lava83\LavaProto\Controller;
+namespace Lava83\LavaProto\Core\Controller;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Response;
@@ -83,7 +83,6 @@ abstract class Controller extends BaseController
         $args = [
             'subject' => $this
         ];
-
         notify(__CLASS__ . '_Pre', $args);
         notify($this->_controller . '_Pre', $args);
         notify($this->_controller . '_Pre::' . $this->_method, $args);

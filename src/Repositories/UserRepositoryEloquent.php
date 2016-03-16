@@ -6,16 +6,16 @@
 
 namespace Lava83\LavaProto\Repositories;
 
+use Lava83\LavaProto\Core\Repositories\Eloquent;
 use Lava83\LavaProto\Entities\User;
 use Lava83\LavaProto\Presenters\UserPresenter;
-use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class UserRepositoryEloquent
  * @package namespace App\Repositories;
  */
-class UserRepositoryEloquent extends BaseRepository implements UserRepository
+class UserRepositoryEloquent extends Eloquent implements UserRepository
 {
     public function presenter()
     {

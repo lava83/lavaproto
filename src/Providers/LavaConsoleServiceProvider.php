@@ -14,7 +14,7 @@ use Lava83\LavaProto\Console\Commands\PluginActivate;
 use Lava83\LavaProto\Console\Commands\PluginDeactivate;
 use Lava83\LavaProto\Console\Commands\PluginDeinstall;
 use Lava83\LavaProto\Console\Commands\PluginInstall;
-use Lava83\LavaProto\Console\Commands\PluginsList;
+use Lava83\LavaProto\Console\Commands\PluginList;
 use Lava83\LavaProto\Core\Plugins\PluginManager;
 
 /**
@@ -43,7 +43,7 @@ class LavaConsoleServiceProvider extends ServiceProvider
     protected function _registerCommands(){
         // list plugins
         $this->app->singleton('command.lava83.lavaproto.plugins.list', function () {
-            return new PluginsList();
+            return new PluginList();
         });
 
         //activate plugin
