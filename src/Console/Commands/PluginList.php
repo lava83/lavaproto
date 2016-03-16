@@ -17,14 +17,14 @@ use Lava83\LavaProto\Core\Plugins\PluginBootstrap;
  * @package Lava83\LavaProto\Console
  * @author Stefan Riedel<sr@srit83.de>
  */
-class PluginsList extends Command
+class PluginList extends Command
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'lava83:plugins-list';
+    protected $name = 'lava83:plugin-list';
 
     /**
      * The console command description.

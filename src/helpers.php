@@ -8,7 +8,7 @@
 
 use \Lava83\LavaProto\Core\Events\Args;
 
-function notify($event, $args, $halt = false) {
+function notify($event, $args = [], $halt = false) {
     if(is_array($args)) {
         $args = new Args($args);
     } elseif(!($args instanceof \Lava83\LavaProto\Core\Events\Args)) {
