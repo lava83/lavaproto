@@ -22,43 +22,43 @@ class PluginBootstrap
     /**
      * @var string
      */
-    protected $_version = null;
+    protected $version = null;
 
     /**
      * @var string
      */
-    protected $_name = null;
+    protected $name = null;
 
     /**
      * @var array
      */
-    protected $_info = [];
+    protected $info = [];
 
     /**
      * @var Plugin
      */
-    protected $_model = null;
+    protected $model = null;
 
     /**
      * @var string
      */
-    protected $_plugin_config_key;
+    protected $plugin_config_key;
 
 
     /**
      * @var string
      */
-    protected $_plugin_config_key_prefix;
+    protected $plugin_config_key_prefix;
 
     /**
      * @var PluginCollection
      */
-    protected $_collection;
+    protected $pluginCollection;
 
     /**
      * @var string
      */
-    protected $_namespace;
+    protected $namespace;
 
     /**
      *
@@ -66,21 +66,21 @@ class PluginBootstrap
      *
      * @var array
      */
-    protected $_subscribes = null;
+    protected $subscribes = null;
     /**
      * @var string
      */
-    protected $_source;
+    protected $source;
 
     /**
      * @var string
      */
-    protected $_path;
+    protected $path;
 
     /**
      * @var \Illuminate\Foundation\Application|mixed
      */
-    protected $_app;
+    protected $app;
 
     /**
      *
@@ -92,17 +92,17 @@ class PluginBootstrap
     public function __construct($name, $info = null)
     {
 
-        $this->_app = app();
-        $this->_name = $name;
-        $this->_namespace = substr(get_class($this), 0, strrpos(get_class($this), '\\'));
+        $this->app = app();
+        $this->name = $name;
+        $this->namespace = substr(get_class($this), 0, strrpos(get_class($this), '\\'));
 
-        $namespace_arr = explode("\\", $this->_namespace);
-        $this->_source = $namespace_arr[count($namespace_arr) - 2];
+        $namespace_arr = explode("\\", $this->namespace);
+        $this->source = $namespace_arr[count($namespace_arr) - 2];
 
-        $this->_plugin_config_key = 'plugin.' . strtolower($name);
-        $this->_plugin_config_key_prefix = $this->_plugin_config_key . '.';
+        $this->plugin_config_key = 'plugin.' . strtolower($name);
+        $this->plugin_config_key_prefix = $this->plugin_config_key . '.';
         config($this->getInfo());
-        config([$this->_plugin_config_key_prefix . 'capabilities' => $this->getCapabilities()]);
+        config([$this->plugin_config_key_prefix . 'capabilities' => $this->getCapabilities()]);
         if (is_array($info)) {
             $this->addInfos($info);
         }
@@ -120,8 +120,8 @@ class PluginBootstrap
     public function getInfo()
     {
         return [
-            $this->_plugin_config_key_prefix . 'version' => $this->getVersion(),
-            $this->_plugin_config_key_prefix . 'label' => $this->getLabel()
+            $this->plugin_config_key_prefix . 'version' => $this->getVersion(),
+            $this->plugin_config_key_prefix . 'label' => $this->getLabel()
         ];
     }
 
@@ -133,7 +133,7 @@ class PluginBootstrap
      */
     public function getVersion()
     {
-        return $this->_version;
+        return $this->version;
     }
 
     /**
@@ -158,7 +158,7 @@ class PluginBootstrap
      */
     final public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -197,7 +197,7 @@ class PluginBootstrap
      */
     public function addInfo($key, $value)
     {
-        config([$this->_plugin_config_key_prefix . $key => $value]);
+        config([$this->plugin_config_key_prefix . $key => $value]);
     }
 
     /**
@@ -205,7 +205,7 @@ class PluginBootstrap
      */
     public function getNamespace()
     {
-        return $this->_namespace;
+        return $this->namespace;
     }
 
     /**
@@ -213,7 +213,7 @@ class PluginBootstrap
      */
     public function setNamespace($namespace)
     {
-        $this->_namespace = $namespace;
+        $this->namespace = $namespace;
         return $this;
     }
 
@@ -222,7 +222,7 @@ class PluginBootstrap
      */
     public function getSource()
     {
-        return $this->_source;
+        return $this->source;
     }
 
     /**
@@ -230,7 +230,7 @@ class PluginBootstrap
      */
     public function setSource($source)
     {
-        $this->_source = $source;
+        $this->source = $source;
         return $this;
     }
 
@@ -240,9 +240,9 @@ class PluginBootstrap
      *
      * @return PluginCollection
      */
-    public function getCollection()
+    public function getPluginCollection()
     {
-        return $this->_collection;
+        return $this->pluginCollection;
     }
 
     /**
@@ -252,9 +252,9 @@ class PluginBootstrap
      * @param PluginCollection $collection
      * @return PluginBootstrap
      */
-    public function setCollection(PluginCollection $collection)
+    public function setPluginCollection(PluginCollection $collection)
     {
-        $this->_collection = $collection;
+        $this->pluginCollection = $collection;
         return $this;
     }
 
@@ -267,7 +267,7 @@ class PluginBootstrap
     public function getPluginInfo()
     {
 
-        $arr = config($this->_plugin_config_key);
+        $arr = config($this->plugin_config_key);
         $arr = array_merge($arr, [
             'class' => get_called_class()
         ]);
@@ -275,35 +275,17 @@ class PluginBootstrap
         //return config($this->_plugin_config_key);
     }
 
-    /**
-     * deactivate the plugin
-     */
-    public function deactivate()
-    {
-        $this->_deactivate();
-    }
 
     /**
      * deactivate the plugin in database
      */
-    protected function _deactivate()
+    public function deactivate()
     {
-        $this->_model->fill([
+        $this->model->fill([
             'active' => false,
             'activation_date' => null
         ]);
-        $this->_model->save();
-    }
-
-    /**
-     * activates the plugin
-     *
-     * if plugin dont installed the plugin will activate at first
-     *
-     */
-    public function activate()
-    {
-       $this->_activate();
+        $this->model->save();
     }
 
     /**
@@ -311,47 +293,31 @@ class PluginBootstrap
      */
     public function isInstalled()
     {
-        return $this->_model->installed;
+        return $this->model->installed;
     }
 
     /**
      * activate the plugin in database
      */
-    protected function _activate()
+    public function activate()
     {
-        $this->_model->fill([
+        $this->model->fill([
             'active' => true,
             'activation_date' => new Carbon
         ]);
-        $this->_model->save();
+        $this->model->save();
     }
 
     /**
      * install the plugin in database
      */
-    protected function _install()
+    public function install()
     {
-        $this->_model->fill([
+        $this->model->fill([
             'installed' => true,
             'installation_date' => new Carbon
         ]);
-        $this->_model->save();
-    }
-
-    /**
-     * install the plugin
-     */
-    public function install()
-    {
-        $this->_install();
-    }
-
-    /**
-     * deinstall the plugin
-     */
-    public function deinstall()
-    {
-        $this->_deinstall();
+        $this->model->save();
     }
 
     /**
@@ -359,24 +325,24 @@ class PluginBootstrap
      */
     public function isActive()
     {
-        return $this->_model->active;
+        return $this->model->active;
     }
 
     /**
      * deinstall the plugin in database
      */
-    protected function _deinstall()
+    public function deinstall()
     {
 
         /** @var $subsc PluginSubscribe */
 
-        $this->_model->fill([
+        $this->model->fill([
             'installed' => false,
             'installation_date' => null
         ]);
-        $this->_model->save();
-        if($subscribes = $this->_model->subscribes()->get()) {
-            foreach($subscribes as $subsc) {
+        $this->model->save();
+        if ($subscribes = $this->model->subscribes()->get()) {
+            foreach ($subscribes as $subsc) {
                 $subsc->delete();
             }
         }
@@ -387,7 +353,7 @@ class PluginBootstrap
      */
     public function getModel()
     {
-        return $this->_model;
+        return $this->model;
     }
 
     /**
@@ -395,16 +361,11 @@ class PluginBootstrap
      */
     public function setModel(Plugin $model)
     {
-        $this->_model = $model;
+        $this->model = $model;
         return $this;
     }
 
     public function subscribeEvent($event, $listener, $position = null)
-    {
-        $this->_subscribeEvent($event, $listener, $position);
-    }
-
-    protected function _subscribeEvent($event, $listener, $position = null)
     {
         $plugin_subscribe_data = [
             'subscribe' => $event,
@@ -412,15 +373,15 @@ class PluginBootstrap
             'position' => (is_null($position)) ? 0 : $position
         ];
 
-        $this->_model->subscribes()->create($plugin_subscribe_data);
+        $this->model->subscribes()->create($plugin_subscribe_data);
     }
 
     public function getSubscribes()
     {
-        if ($this->_subscribes == null) {
-            $this->_subscribes = $this->_model->subscribes()->get();
+        if ($this->subscribes == null) {
+            $this->subscribes = $this->model->subscribes()->get();
         }
-        return $this->_subscribes;
+        return $this->subscribes;
     }
 
     /**
@@ -435,7 +396,7 @@ class PluginBootstrap
             $name = strtolower(substr($name, 3));
         }
         $info = $this->getInfo();
-        $key = $this->_plugin_config_key_prefix . $name;
+        $key = $this->plugin_config_key_prefix . $name;
         if (isset($info[$key])) {
             return $info[$key];
         }
@@ -448,8 +409,9 @@ class PluginBootstrap
      *
      * @return string
      */
-    public function getPath() {
-        if(empty($this->_path)) {
+    public function getPath()
+    {
+        if (empty($this->path)) {
             $ret = '';
             $reflection = new \ReflectionClass($this);
 
@@ -457,19 +419,18 @@ class PluginBootstrap
                 $ret = dirname($fileName) . DIRECTORY_SEPARATOR;
             }
 
-            $this->_path = $ret;
-
+            $this->path = $ret;
         }
 
-        return $this->_path;
+        return $this->path;
     }
 
-    public function addTemplatePath($path, $namespace = null) {
-        $this->_app['view']->prependLocation($path);
-        if($namespace == null) {
+    public function addTemplatePath($path, $namespace = null)
+    {
+        $this->app['view']->prependLocation($path);
+        if ($namespace == null) {
             $namespace = $this->getName();
         }
-        $this->_app['lava83.twig.loader.filesystem']->addPath($path, $namespace);
+        $this->app['lava83.twig.loader.filesystem']->addPath($path, $namespace);
     }
-
 }

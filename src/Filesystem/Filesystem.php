@@ -25,35 +25,38 @@ class Filesystem extends BaseFileSystem
      * @param string $file_path path to the class
      * @throws FilesystemException
      */
-    public function getClassInfo($file_path) {
-        if(!$this->exists($file_path)) {
+    public function getClassInfo($file_path)
+    {
+        if (!$this->exists($file_path)) {
             throw new FilesystemException(sprintf("The file '%s' doesn't exists.", $file_path));
         }
         $fp = $this->open($file_path);
         $cls = $namespace = $buffer = '';
         $i = 0;
-        while(!$cls) {
-            if($this->iseof($fp)) {
+        while (!$cls) {
+            if ($this->iseof($fp)) {
                 break;
             }
             $buffer .= $this->read($fp);
             $tokens = token_get_all($buffer);
 
-            if (strpos($buffer, '{') === false) continue;
+            if (strpos($buffer, '{') === false) {
+                continue;
+            }
 
-            for (;$i<count($tokens);$i++) {
+            for (; $i<count($tokens); $i++) {
                 if ($tokens[$i][0] === T_NAMESPACE) {
-                    for ($j=$i+1;$j<count($tokens); $j++) {
+                    for ($j=$i+1; $j<count($tokens); $j++) {
                         if ($tokens[$j][0] === T_STRING) {
                             $namespace .= '\\'.$tokens[$j][1];
-                        } else if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                        } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
                             break;
                         }
                     }
                 }
 
                 if ($tokens[$i][0] === T_CLASS) {
-                    for ($j=$i+1;$j<count($tokens);$j++) {
+                    for ($j=$i+1; $j<count($tokens); $j++) {
                         if ($tokens[$j] === '{') {
                             $cls = $tokens[$i+2][1];
                         }
@@ -74,12 +77,13 @@ class Filesystem extends BaseFileSystem
      * @param null $context
      * @return resource
      */
-    public function open($file_path, $mode = 'r', $include_path = null, $context = null) {
-        if($include_path == null && $context == null) {
+    public function open($file_path, $mode = 'r', $include_path = null, $context = null)
+    {
+        if ($include_path == null && $context == null) {
             return fopen($file_path, $mode);
-        } elseif($include_path != null && $context == null) {
+        } elseif ($include_path != null && $context == null) {
             return fopen($file_path, $mode, $include_path);
-        } elseif($include_path != null && $context != null) {
+        } elseif ($include_path != null && $context != null) {
             return fopen($file_path, $mode, $include_path, $context);
         }
     }
@@ -91,7 +95,8 @@ class Filesystem extends BaseFileSystem
      * @param $fp
      * @return bool
      */
-    public function iseof($fp) {
+    public function iseof($fp)
+    {
         return feof($fp);
     }
 
@@ -103,8 +108,8 @@ class Filesystem extends BaseFileSystem
      * @param int $length
      * @return string
      */
-    public function read($fp, $length=1024) {
+    public function read($fp, $length = 1024)
+    {
         return fread($fp, $length);
     }
-
 }

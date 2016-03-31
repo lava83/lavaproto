@@ -13,7 +13,6 @@
 
 namespace Lava83\LavaProto\Console\Commands;
 
-
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Input\InputArgument;

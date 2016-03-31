@@ -8,7 +8,6 @@
 
 namespace Lava83\LavaProto\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 class Plugin extends Model
@@ -43,10 +42,8 @@ class Plugin extends Model
         'active' => 'bool'
     ];
 
-    public function subscribes() {
+    public function subscribes()
+    {
         return $this->hasMany(PluginSubscribe::class);
     }
-
-
-
 }

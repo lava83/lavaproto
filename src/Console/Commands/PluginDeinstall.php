@@ -43,12 +43,12 @@ class PluginDeinstall extends Command
     /**
      * @var PluginManager
      */
-    protected $_pluginmanager;
+    protected $pluginManager;
 
     public function __construct(PluginManager $pluginManager)
     {
         parent::__construct();
-        $this->_pluginmanager = $pluginManager;
+        $this->pluginManager = $pluginManager;
     }
 
     /**
@@ -58,9 +58,9 @@ class PluginDeinstall extends Command
      */
     public function handle()
     {
-        $this->_pluginmanager->init();
-        $plugin = $this->_pluginmanager->getCollection()->get($this->argument('plugin'));
-        if($plugin->isActive()) {
+        $this->pluginManager->init();
+        $plugin = $this->pluginManager->getPluginCollection()->get($this->argument('plugin'));
+        if ($plugin->isActive()) {
             $plugin->deactivate();
         }
         $plugin->deinstall();
@@ -69,5 +69,4 @@ class PluginDeinstall extends Command
 EOF;
         $this->line($line);
     }
-
 }

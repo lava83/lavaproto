@@ -63,5 +63,4 @@ class Translator extends Twig_Extension
             ),
         ];
     }
-
 }

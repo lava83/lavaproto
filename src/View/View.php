@@ -36,7 +36,7 @@ class View extends ViewFactory
     {
         $normal_path = $this->normalizeName($view);
         $absolut_path = $this->finder->find($normal_path);
-        $this->_preparePath($absolut_path);
+        $this->preparePath($absolut_path);
         $this->view = parent::make($view, $data, $mergeData);
         return $this->view;
     }
@@ -47,9 +47,10 @@ class View extends ViewFactory
      *
      * @param $path
      */
-    protected function _preparePath($path) {
+    protected function preparePath($path)
+    {
         $extends_pos = strpos($this->path, 'extends:');
-        if($this->path && $extends_pos === 0) {
+        if ($this->path && $extends_pos === 0) {
             $this->path .= '|' . $path;
         } elseif ($this->path && $extends_pos === false) {
             $this->path = 'extends:' . $this->path . '|' . $path;
@@ -65,10 +66,11 @@ class View extends ViewFactory
      * @param $view
      * @return $this
      */
-    public function extendTemplate($view) {
+    public function extendTemplate($view)
+    {
         $normal_path = $this->normalizeName($view);
         $absolut_path = $this->finder->find($normal_path);
-        $this->_preparePath($absolut_path);
+        $this->preparePath($absolut_path);
         $this->view->setPath($this->path);
         return $this;
     }
@@ -81,8 +83,9 @@ class View extends ViewFactory
      * @return string
      * @throws ViewException
      */
-    public function getPath() {
-        if(is_null($this->view)) {
+    public function getPath()
+    {
+        if (is_null($this->view)) {
             throw new ViewException('View is not defined');
         }
         return $this->view->getPath();
@@ -95,10 +98,10 @@ class View extends ViewFactory
      * @see FileViewFinder::prependLocation
      * @param $location
      */
-    public function prependLocation($location, $namespace = null) {
+    public function prependLocation($location, $namespace = null)
+    {
         //app('smarty.view')->getSmarty()->prependDirectory($location);
         $this->finder->prependLocation($location);
 
     }
-
 }

@@ -8,7 +8,6 @@
 
 namespace Lava83\LavaProto\Console\Commands;
 
-
 use Illuminate\Console\Command;
 use Lava83\LavaProto\Core\Plugins\PluginBootstrap;
 
@@ -42,9 +41,8 @@ class PluginList extends Command
     {
         /** @var $plugin PluginBootstrap */
         \PluginManager::sync();
-        if ($collection = \PluginManager::getCollection() and count($collection) > 0) {
+        if ($collection = \PluginManager::getPluginCollection() and count($collection) > 0) {
             foreach ($collection as $plugin) {
-
                 $active = ($plugin->isActive()) ? 'yes' : 'no';
                 $installed = ($plugin->isInstalled()) ? 'yes' : 'no';
                 $line = <<<EOF

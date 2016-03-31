@@ -22,33 +22,35 @@ class LavaPluginServiceProvider extends ServiceProvider
     /**
      * @var PluginManager
      */
-    protected $_pluginmanager;
+    protected $pluginManager;
 
     /**
      * Boot the framework services
      *
      * @return void
      */
-    public function boot(PluginManager $pluginManager) {
+    public function boot(PluginManager $pluginManager)
+    {
         /** @var $plugin PluginBootstrap */
 
-        $this->_pluginmanager = $pluginManager;
-        $this->_publishConfigs();
-        $this->_publishMigrations();
-        $this->_listenOnEvents();
+        $this->pluginManager = $pluginManager;
+        $this->publishConfigs();
+        $this->publishMigrations();
+        $this->listenOnEvents();
 
     }
 
     public function register()
     {
-        $this->_registerFacades();
-        $this->_extendFileSystem();
+        $this->registerFacades();
+        $this->extendFileSystem();
     }
 
     /**
      * publishes all config files for this service provider
      */
-    protected function _publishConfigs() {
+    protected function publishConfigs()
+    {
         $this->publishes([
             __DIR__.'/../../config/lava83-plugin-manager.php' => config_path('lava83-plugin-manager.php'),
         ]);
@@ -57,14 +59,16 @@ class LavaPluginServiceProvider extends ServiceProvider
     /**
      * publishes all migrations for this service provider
      */
-    protected function _publishMigrations() {
+    protected function publishMigrations()
+    {
         $this->publishes([
             __DIR__ . '/../../database/migrations' => database_path('migrations')
         ]);
     }
 
-    protected function _registerFacades() {
-        $this->app[PluginManager::class] = $this->app->share(function(){
+    protected function registerFacades()
+    {
+        $this->app[PluginManager::class] = $this->app->share(function () {
             return new PluginManager(config('lava83-plugin-manager.path'), config('lava83-plugin-manager.namespaces'));
         });
         $this->app->booting(function () {
@@ -78,7 +82,8 @@ class LavaPluginServiceProvider extends ServiceProvider
      *
      * @see Lava83\LavaProto\Filesystem\Filesystem
      */
-    protected function _extendFileSystem() {
+    protected function extendFileSystem()
+    {
 
         $this->app->singleton('files', function () {
             return new Filesystem;
@@ -90,10 +95,10 @@ class LavaPluginServiceProvider extends ServiceProvider
     /**
      * iterate the plugins in collection
      */
-    protected function _listenOnEvents()
+    protected function listenOnEvents()
     {
-        foreach ($this->_pluginmanager->getCollection() as $plugin) {
-            $this->_preparePlugin($plugin);
+        foreach ($this->pluginManager->getPluginCollection() as $plugin) {
+            $this->preparePlugin($plugin);
         }
     }
 
@@ -104,7 +109,7 @@ class LavaPluginServiceProvider extends ServiceProvider
      * @param $plugin PluginBootstrap
      * @throws PluginManagerException
      */
-    protected function _preparePlugin($plugin)
+    protected function preparePlugin($plugin)
     {
         if ($plugin->isActive()) {
             $subscribes = $plugin->getSubscribes();
@@ -112,10 +117,10 @@ class LavaPluginServiceProvider extends ServiceProvider
                 foreach ($subscribes as $event) {
                     //event class is given
                     if (strpos($event->listener, '@')) {
-                        $this->_listenOnEventClass($event, $plugin);
+                        $this->listenOnEventClass($event, $plugin);
                     } else {
                         //event is listen on bootstrap file
-                        $this->_listenOnBootstrapClass($plugin, $event);
+                        $this->listenOnBootstrapClass($plugin, $event);
                     }
                 }
             }
@@ -126,7 +131,7 @@ class LavaPluginServiceProvider extends ServiceProvider
      * @param $event
      * @throws PluginManagerException
      */
-    protected function _listenOnEventClass($event, PluginBootstrap $plugin = null)
+    protected function listenOnEventClass($event, PluginBootstrap $plugin = null)
     {
         list($cls_name, $method_name) = explode('@', $event->listener);
         if ($cls_name && $method_name && class_exists($cls_name)) {
@@ -146,9 +151,8 @@ class LavaPluginServiceProvider extends ServiceProvider
      * @param $plugin
      * @param $event
      */
-    protected function _listenOnBootstrapClass($plugin, $event)
+    protected function listenOnBootstrapClass($plugin, $event)
     {
         \Event::listen($event->subscribe, [$plugin, $event->listener]);
     }
-
 }

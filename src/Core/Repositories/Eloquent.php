@@ -34,7 +34,7 @@ abstract class Eloquent extends BaseEloquentRepository
      */
     public function update(array $attributes, $id)
     {
-        return $this->_fireParentMethodAndNotify([$attributes, $id], 'update');
+        return $this->fireParentMethodAndNotify([$attributes, $id], 'update');
     }
 
     /**
@@ -42,7 +42,7 @@ abstract class Eloquent extends BaseEloquentRepository
      */
     public function delete($id)
     {
-        return $this->_fireParentMethodAndNotify([$id], 'delete');
+        return $this->fireParentMethodAndNotify([$id], 'delete');
     }
 
     /**
@@ -50,7 +50,7 @@ abstract class Eloquent extends BaseEloquentRepository
      */
     public function create(array $attributes)
     {
-        return $this->_fireParentMethodAndNotify([$attributes], 'create');
+        return $this->fireParentMethodAndNotify([$attributes], 'create');
     }
 
     /**
@@ -71,33 +71,31 @@ abstract class Eloquent extends BaseEloquentRepository
         return $this;
     }
 
-    protected function _fireParentMethodAndNotify($attributes, $method, $args = [])
+    protected function fireParentMethodAndNotify($attributes, $method, $args = [])
     {
         $args = array_merge($args, [
             'subject' => $this
         ]);
-        $this->_notifyPreEvents($args, $method);
+        $this->notifyPreEvents($args, $method);
         $ret = call_user_func_array('parent::' . $method, $attributes);
         $args = array_merge($args, ['ret' => $ret]);
-        $this->_notifyPostEvents($args, $method);
+        $this->notifyPostEvents($args, $method);
         return $ret;
     }
 
-    protected function _notifyPreEvents($args, $method)
+    protected function notifyPreEvents($args, $method)
     {
-        $this->_notifyEvents($args, 'Pre::' . $method);
+        $this->notifyEvents($args, 'Pre::' . $method);
     }
 
-    protected function _notifyPostEvents($args, $method)
+    protected function notifyPostEvents($args, $method)
     {
-        $this->_notifyEvents($args, 'Post::' . $method);
+        $this->notifyEvents($args, 'Post::' . $method);
     }
 
-    protected function _notifyEvents($args, $suffix = null)
+    protected function notifyEvents($args, $suffix = null)
     {
         notify(__CLASS__ . '_' . $suffix, $args);
         notify(get_called_class() . '_' . $suffix, $args);
     }
-
-
 }

@@ -8,7 +8,6 @@
 
 namespace Lava83\LavaProto\Core\Plugins;
 
-
 use Lava83\LavaProto\Exceptions\PluginManagerException;
 use Lava83\LavaProto\Models\Plugin;
 use Symfony\Component\Finder\SplFileInfo;
@@ -25,7 +24,7 @@ class PluginManager
      *
      * @var array
      */
-    protected $_path = null;
+    protected $path = null;
 
     /**
      *
@@ -33,12 +32,12 @@ class PluginManager
      *
      * @var array
      */
-    protected $_namespaces = [];
+    protected $namespaces = [];
 
     /**
      * @var PluginCollection
      */
-    protected $_collection;
+    protected $pluginCollection;
 
     /**
      * @param array $path
@@ -60,8 +59,8 @@ class PluginManager
      */
     public function addNamespaces($namespaces)
     {
-        if($namespaces) {
-            $this->_namespaces = array_merge($this->_namespaces, $namespaces);
+        if ($namespaces) {
+            $this->namespaces = array_merge($this->namespaces, $namespaces);
         }
         return $this;
     }
@@ -71,30 +70,30 @@ class PluginManager
      */
     public function init()
     {
-        if (!empty($this->_path) && !empty($this->_namespaces)) {
-            $this->getCollection();
+        if (!empty($this->path) && !empty($this->namespaces)) {
+            $this->getPluginCollection();
         }
     }
 
     /**
      * @return PluginCollection
      */
-    public function getCollection()
+    public function getPluginCollection()
     {
-        if (empty($this->_collection)) {
-            $this->_collection = new PluginCollection();
+        if (empty($this->pluginCollection)) {
+            $this->pluginCollection = new PluginCollection();
             $plugin_model = new Plugin;
             if (\Schema::hasTable($plugin_model->getTable()) and $plugins = $plugin_model->all()) {
                 foreach ($plugins as $pl) {
-                    $plugin_path = $this->_path . DIRECTORY_SEPARATOR . $pl->source . DIRECTORY_SEPARATOR . $pl->name . DIRECTORY_SEPARATOR . 'Bootstrap.php';
+                    $plugin_path = $this->path . DIRECTORY_SEPARATOR . $pl->source . DIRECTORY_SEPARATOR . $pl->name .
+                        DIRECTORY_SEPARATOR . 'Bootstrap.php';
                     $plugin = $this->getPlugin($plugin_path);
                     $plugin->setModel($pl);
-                    $this->_collection->registerPlugin($plugin);
+                    $this->pluginCollection->registerPlugin($plugin);
                 }
             }
-
         }
-        return $this->_collection;
+        return $this->pluginCollection;
     }
 
     /**
@@ -102,7 +101,7 @@ class PluginManager
      */
     public function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -113,7 +112,7 @@ class PluginManager
     {
 
         if (\File::exists($path) && \File::isDirectory($path)) {
-            $this->_path = $path;
+            $this->path = $path;
         }
         return $this;
     }
@@ -124,7 +123,7 @@ class PluginManager
      */
     public function getNamespaces()
     {
-        return $this->_namespaces;
+        return $this->namespaces;
     }
 
     /**
@@ -133,7 +132,7 @@ class PluginManager
      */
     public function setNamespaces($namespaces)
     {
-        $this->_namespaces = $namespaces;
+        $this->namespaces = $namespaces;
         return $this;
     }
 
@@ -146,7 +145,7 @@ class PluginManager
      */
     public function addNamespace($namespace)
     {
-        $this->_namespaces[] = $namespace;
+        $this->namespaces[] = $namespace;
         return $this;
     }
 
@@ -158,9 +157,9 @@ class PluginManager
     {
         $collection = new PluginCollection();
 
-        foreach ($this->_namespaces as $namespace) {
+        foreach ($this->namespaces as $namespace) {
             //foreach ($this->_path as $path) {
-            $plugin_dir = $this->_path . DIRECTORY_SEPARATOR . $namespace;
+            $plugin_dir = $this->path . DIRECTORY_SEPARATOR . $namespace;
             if (\File::exists($plugin_dir) && \File::isDirectory($plugin_dir)) {
                 $namespace_files = \File::allFiles($plugin_dir);
                 foreach ($namespace_files as $file) {
@@ -187,7 +186,10 @@ class PluginManager
     {
         list($namespace, $cls) = \File::getClassInfo($plugin_path);
         if ($namespace == null) {
-            throw new PluginManagerException(sprintf("The plugin: '%s' doesn't have a namespace but the initializer expects a namespace in the class", $plugin_path));
+            throw new PluginManagerException(sprintf(
+                "The plugin: '%s' doesn't have a namespace but the initializer expects a namespace in the class",
+                $plugin_path
+            ));
         }
 
         $namespace_arr = explode("\\", $namespace);
@@ -209,7 +211,7 @@ class PluginManager
     public function sync()
     {
         $complete_collection = $this->getCompleteCollection();
-        foreach($complete_collection as $plugin) {
+        foreach ($complete_collection as $plugin) {
             /** @var $plugin PluginBootstrap */
             /** @var  $model Plugin */
 
@@ -226,13 +228,13 @@ class PluginManager
                 'link' => $plugin->getLink(),
 
             ];
-            if(!($model = Plugin::where('namespace', $plugin->getNamespace())->first())) {
+            if (!($model = Plugin::where('namespace', $plugin->getNamespace())->first())) {
                 $model = Plugin::create($plugin_data);
             } else {
                 $model->update($plugin_data);
             }
             $plugin->setModel($model);
-            $this->_collection->registerPlugin($plugin);
+            $this->pluginCollection->registerPlugin($plugin);
         }
         return $this;
     }

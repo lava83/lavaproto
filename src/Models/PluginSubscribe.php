@@ -8,7 +8,6 @@
 
 namespace Lava83\LavaProto\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 class PluginSubscribe extends Model
@@ -19,8 +18,8 @@ class PluginSubscribe extends Model
         'position'
     ];
 
-    public function plugin() {
+    public function plugin()
+    {
         return $this->belongsTo(Plugin::class);
     }
-
 }

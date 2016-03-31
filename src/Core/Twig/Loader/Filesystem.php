@@ -8,15 +8,14 @@
 
 namespace Lava83\LavaProto\Core\Twig\Loader;
 
-
 class Filesystem extends \Twig_Loader_Filesystem
 {
 
     /**
      * @return array
      */
-    public function getAllPaths() {
+    public function getAllPaths()
+    {
         return $this->paths;
     }
-
 }
