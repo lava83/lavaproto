@@ -8,7 +8,6 @@
 
 namespace Lava83\LavaProto\Exceptions;
 
-
 class TwigTokenException extends \Exception
 {
 

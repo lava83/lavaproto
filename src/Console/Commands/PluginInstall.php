@@ -43,12 +43,12 @@ class PluginInstall extends Command
     /**
      * @var PluginManager
      */
-    protected $_pluginmanager;
+    protected $pluginManager;
 
     public function __construct(PluginManager $pluginManager)
     {
         parent::__construct();
-        $this->_pluginmanager = $pluginManager;
+        $this->pluginManager = $pluginManager;
     }
 
     /**
@@ -68,14 +68,14 @@ EOF;
         $success_line = <<<EOF
 <comment>{$plugin_name} installed success</comment>
 EOF;
-        $this->_pluginmanager->init();
-        if($plugin = $this->_pluginmanager->getCollection()->get($plugin_name)) {
+        $this->pluginManager->init();
+        if ($plugin = $this->pluginManager->getPluginCollection()->get($plugin_name)) {
             $plugin->install();
             $this->line($success_line);
         } else {
-            if($this->confirm($confirm_line, 'y')) {
-                $this->_pluginmanager->sync();
-                if($plugin = $this->_pluginmanager->getCollection()->get($plugin_name)) {
+            if ($this->confirm($confirm_line, 'y')) {
+                $this->pluginManager->sync();
+                if ($plugin = $this->pluginManager->getPluginCollection()->get($plugin_name)) {
                     $plugin->install();
                     $this->line($success_line);
                 } else {
@@ -86,5 +86,4 @@ EOF;
 
 
     }
-
 }

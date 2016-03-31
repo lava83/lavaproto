@@ -26,46 +26,47 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $_cookies = [];
+    protected $cookies = [];
 
-    protected $_controller;
+    protected $controller;
 
-    protected $_method;
+    protected $method;
 
     /**
      * @var View
      */
-    protected $_view;
+    protected $view;
 
     /**
      * @var Response
      */
-    protected $_response;
+    protected $response;
 
     /**
      * @var RepositoryInterface
      */
-    protected $_repository;
+    protected $repository;
 
     /**
      * @return RepositoryInterface
      */
     public function getRepository()
     {
-        return $this->_repository;
+        return $this->repository;
     }
 
     /**
      * Constructor is fired two events Controller_Init_Pre and CalledController_Init_Pre
      */
-    public function __construct() {
-        $this->_view = view();
-        $this->_controller = get_called_class();
+    public function __construct()
+    {
+        $this->view = view();
+        $this->controller = get_called_class();
         $args = [
             'subject' => $this
         ];
         notify(__CLASS__ . '_Init_Post', $args);
-        notify($this->_controller . '_Init_Post', $args);
+        notify($this->controller . '_Init_Post', $args);
     }
 
     /**
@@ -79,21 +80,21 @@ abstract class Controller extends BaseController
      */
     public function callAction($method, $parameters)
     {
-        $this->_method = $method;
+        $this->method = $method;
         $args = [
             'subject' => $this
         ];
         notify(__CLASS__ . '_Pre', $args);
-        notify($this->_controller . '_Pre', $args);
-        notify($this->_controller . '_Pre::' . $this->_method, $args);
+        notify($this->controller . '_Pre', $args);
+        notify($this->controller . '_Pre::' . $this->method, $args);
 
-        $this->_response = parent::callAction($method, $parameters);
+        $this->response = parent::callAction($method, $parameters);
 
         notify(__CLASS__ . '_Post', $args);
-        notify($this->_controller . '_Post', $args);
-        notify($this->_controller . '_Post::' . $this->_method, $args);
+        notify($this->controller . '_Post', $args);
+        notify($this->controller . '_Post::' . $this->method, $args);
 
-        return $this->_response;
+        return $this->response;
     }
 
     /**
@@ -101,7 +102,7 @@ abstract class Controller extends BaseController
      */
     public function getCookies()
     {
-        return $this->_cookies;
+        return $this->cookies;
     }
 
     /**
@@ -109,7 +110,7 @@ abstract class Controller extends BaseController
      */
     public function getController()
     {
-        return $this->_controller;
+        return $this->controller;
     }
 
     /**
@@ -117,7 +118,7 @@ abstract class Controller extends BaseController
      */
     public function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
 
     /**
@@ -125,7 +126,7 @@ abstract class Controller extends BaseController
      */
     public function getResponse()
     {
-        return $this->_response;
+        return $this->response;
     }
 
     /**
@@ -133,7 +134,7 @@ abstract class Controller extends BaseController
      */
     public function getView()
     {
-        return $this->_view;
+        return $this->view;
     }
 
     /**
@@ -146,13 +147,12 @@ abstract class Controller extends BaseController
      */
     public function view($sViewName, array $aData = [])
     {
-        $oView = $this->_view->make($sViewName, $aData);
+        $oView = $this->view->make($sViewName, $aData);
         $oResponse = \Response::make($oView);
-        $this->_cookies = [];
-        foreach ($this->_cookies as $oCookie) {
+        $this->cookies = [];
+        foreach ($this->cookies as $oCookie) {
             $oResponse->withCookie($oCookie);
         }
         return $oResponse;
     }
-
 }

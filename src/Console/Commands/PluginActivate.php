@@ -43,12 +43,12 @@ class PluginActivate extends Command
     /**
      * @var PluginManager
      */
-    protected $_pluginmanager;
+    protected $pluginManager;
 
     public function __construct(PluginManager $pluginManager)
     {
         parent::__construct();
-        $this->_pluginmanager = $pluginManager;
+        $this->pluginManager = $pluginManager;
     }
 
     /**
@@ -58,10 +58,10 @@ class PluginActivate extends Command
      */
     public function handle()
     {
-        $this->_pluginmanager->init();
-        $plugin = $this->_pluginmanager->getCollection()->get($this->argument('plugin'));
-        if($plugin !== null) {
-            if(!$plugin->isInstalled()) {
+        $this->pluginManager->init();
+        $plugin = $this->pluginManager->getPluginCollection()->get($this->argument('plugin'));
+        if ($plugin !== null) {
+            if (!$plugin->isInstalled()) {
                 $plugin->install();
             }
             $plugin->activate();
@@ -74,5 +74,4 @@ EOF;
         }
 
     }
-
 }

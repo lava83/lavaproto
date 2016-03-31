@@ -13,7 +13,6 @@
 
 namespace Lava83\LavaProto\Presenters;
 
-
 use Lava83\LavaProto\Transformers\UserTransformer;
 use Prettus\Repository\Presenter\FractalPresenter;
 

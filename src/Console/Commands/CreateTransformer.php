@@ -13,7 +13,6 @@
 
 namespace Lava83\LavaProto\Console\Commands;
 
-
 use Prettus\Repository\Generators\Commands\TransformerCommand;
 
 class CreateTransformer extends TransformerCommand

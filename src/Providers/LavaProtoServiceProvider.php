@@ -42,13 +42,14 @@ class LavaProtoServiceProvider extends ServiceProvider
         $this->app->register(LavaConsoleServiceProvider::class);
         /** @todo LavaRepositoryServiceProvider */
         $this->app->register(RepositoryServiceProvider::class);
-        $this->_bindRepositories();
+        $this->bindRepositories();
     }
 
-    protected function _bindRepositories()
+    protected function bindRepositories()
     {
         if (config('lava83-repositories.auto-bind-eloquent')) {
-            $repositoriesPath = config('repository.generator.basePath') . DIRECTORY_SEPARATOR . config('repository.generator.paths.repositories');
+            $repositoriesPath = config('repository.generator.basePath') . DIRECTORY_SEPARATOR .
+                config('repository.generator.paths.repositories');
             $rootNamespace = config('repository.generator.rootNamespace');
             if ($repositories = glob($repositoriesPath . DIRECTORY_SEPARATOR . '*Repository.php')) {
                 foreach ($repositories as $repository) {
@@ -63,6 +64,4 @@ class LavaProtoServiceProvider extends ServiceProvider
         }
         $this->app->bind(UserRepository::class, UserRepositoryEloquent::class);
     }
-
-
 }

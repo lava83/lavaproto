@@ -13,7 +13,6 @@
 
 namespace Lava83\LavaProto\Transformers;
 
-
 use Lava83\LavaProto\Entities\User;
 use League\Fractal\TransformerAbstract;
 

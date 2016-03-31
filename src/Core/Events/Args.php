@@ -13,44 +13,42 @@
 
 namespace Lava83\LavaProto\Core\Events;
 
-
 use Lava83\LavaProto\Exceptions\EventException;
 
 class Args
 {
 
-    protected $_args = [];
+    protected $args = [];
 
     public function __construct(array $args = [])
     {
-        foreach($args as $key => $value) {
-            $this->_args[$key] = $value;
+        foreach ($args as $key => $value) {
+            $this->args[$key] = $value;
         }
     }
 
     /**
      * getter of the main subject of an event
      */
-    public function getSubject() {
-        return (isset($this->_args['subject'])) ? $this->_args['subject'] : null;
+    public function getSubject()
+    {
+        return (isset($this->args['subject'])) ? $this->args['subject'] : null;
     }
 
     /**
      * {@inheritdoc}
      */
-    function __call($name, $arguments)
+    public function __call($name, $arguments)
     {
 
-        if(strpos($name, 'get') !== false) {
+        if (strpos($name, 'get') !== false) {
             $argname = strtolower(substr($name, 3));
-            if(isset($this->_args[$argname])) {
-                return $this->_args[$argname];
+            if (isset($this->args[$argname])) {
+                return $this->args[$argname];
             } else {
                 throw new EventException(sprintf('The argument: "%s" doesnt exists', $argname));
             }
         }
 
     }
-
-
 }

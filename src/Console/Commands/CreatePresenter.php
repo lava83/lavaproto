@@ -13,12 +13,10 @@
 
 namespace Lava83\LavaProto\Console\Commands;
 
-
 use Prettus\Repository\Generators\Commands\PresenterCommand;
 
 class CreatePresenter extends PresenterCommand
 {
 
     protected $name = 'lava83:make:presenter';
-
 }

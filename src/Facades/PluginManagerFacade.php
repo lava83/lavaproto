@@ -8,11 +8,13 @@
 
 namespace Lava83\LavaProto\Facades;
 
-
 use Illuminate\Support\Facades\Facade;
 use Lava83\LavaProto\Core\Plugins\PluginManager;
 
 class PluginManagerFacade extends Facade
 {
-    protected static function getFacadeAccessor() { return PluginManager::class; }
+    protected static function getFacadeAccessor()
+    {
+        return PluginManager::class;
+    }
 }

@@ -7,8 +7,8 @@
  */
 
 namespace Lava83\LavaProto\Core\Plugins;
-use Lava83\LavaProto\Exceptions\PluginManagerException;
 
+use Lava83\LavaProto\Exceptions\PluginManagerException;
 
 /**
  * Class PluginCollection
@@ -20,13 +20,14 @@ class PluginCollection implements \IteratorAggregate
     /**
      * @var \ArrayObject
      */
-    protected $_plugins;
+    protected $arrayObject;
 
     /**
      * initialize the plugin collection
      */
-    public function __construct() {
-        $this->_plugins = new \ArrayObject();
+    public function __construct()
+    {
+        $this->arrayObject = new \ArrayObject();
     }
 
     /**
@@ -37,7 +38,7 @@ class PluginCollection implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return $this->_plugins;
+        return $this->arrayObject;
     }
 
     /**
@@ -50,8 +51,8 @@ class PluginCollection implements \IteratorAggregate
      */
     public function registerPlugin(PluginBootstrap $plugin)
     {
-        $plugin->setCollection($this);
-        $this->_plugins[$plugin->getName()] = $plugin;
+        $plugin->setPluginCollection($this);
+        $this->arrayObject[$plugin->getName()] = $plugin;
         return $this;
     }
 
@@ -61,12 +62,13 @@ class PluginCollection implements \IteratorAggregate
      * @return PluginBootstrap|null
      * @throws PluginManagerException
      */
-    public function get($name, $throw_exception = false) {
-        if (!$this->_plugins->offsetExists($name)) {
+    public function get($name, $throw_exception = false)
+    {
+        if (!$this->arrayObject->offsetExists($name)) {
             $this->load($name, $throw_exception);
         }
-        if ($this->_plugins->offsetExists($name)) {
-            return $this->_plugins->offsetGet($name);
+        if ($this->arrayObject->offsetExists($name)) {
+            return $this->arrayObject->offsetGet($name);
         } else {
             return null;
         }
@@ -74,7 +76,7 @@ class PluginCollection implements \IteratorAggregate
 
     public function load($name, $throw_exception = true)
     {
-        if ($throw_exception && !$this->_plugins->offsetExists($name)) {
+        if ($throw_exception && !$this->arrayObject->offsetExists($name)) {
             throw new PluginManagerException(sprintf("Plugin %s not found failure", $name));
         }
         return $this;
@@ -87,12 +89,12 @@ class PluginCollection implements \IteratorAggregate
 
     public function reset()
     {
-        $this->_plugins->exchangeArray(array());
+        $this->arrayObject->exchangeArray(array());
         return $this;
     }
 
-    public function count() {
-        return $this->_plugins->count();
+    public function count()
+    {
+        return $this->arrayObject->count();
     }
-
 }

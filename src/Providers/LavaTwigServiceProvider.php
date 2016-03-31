@@ -19,22 +19,23 @@ use TwigBridge\Facade\Twig;
 class LavaTwigServiceProvider extends ServiceProvider
 {
 
-    protected $_aliases = [
+    protected $aliases = [
         'Twig' => Twig::class,
     ];
 
     public function register()
     {
-        $this->_registerViewFactory();
-        $this->_registerTwigBridge();
-        $this->_registerTwigExtensions();
+        $this->registerViewFactory();
+        $this->registerTwigBridge();
+        $this->registerTwigExtensions();
 
 
     }
 
-    protected function _registerTwigExtensions() {
+    protected function registerTwigExtensions()
+    {
         \Twig::addTokenParser(new ExtendsParent());
-        $this->app->bindIf('lava83.twig.loader.filesystem', function(){
+        $this->app->bindIf('lava83.twig.loader.filesystem', function () {
             return new Filesystem($this->app['config']['view.paths']);
         }, true);
         \Twig::getLoader()->addLoader($this->app['lava83.twig.loader.filesystem']);
@@ -48,7 +49,8 @@ class LavaTwigServiceProvider extends ServiceProvider
      * @see Lava83\LavaProto\View\View
      * @see Lava83\LavaProto\View\FileViewFinder
      */
-    protected function _registerViewFactory() {
+    protected function registerViewFactory()
+    {
 
         /**
          * @var \Illuminate\Contracts\Foundation\Application
@@ -58,7 +60,7 @@ class LavaTwigServiceProvider extends ServiceProvider
         /**
          * FileViewFinder
          */
-        $app->extend('view.finder', function() use ($app) {
+        $app->extend('view.finder', function () use ($app) {
             $paths = $app['config']['view.paths'];
 
             return new FileViewFinder($app['files'], $paths);
@@ -67,7 +69,7 @@ class LavaTwigServiceProvider extends ServiceProvider
         /**
          * View Factory
          */
-        $app->extend('view', function() use ($app) {
+        $app->extend('view', function () use ($app) {
             $resolver = $app['view.engine.resolver'];
             $finder = $app['view.finder'];
             $env = new View($resolver, $finder, $app['events']);
@@ -77,9 +79,9 @@ class LavaTwigServiceProvider extends ServiceProvider
         });
     }
 
-    public function _registerTwigBridge()
+    public function registerTwigBridge()
     {
         $this->app->register(\TwigBridge\ServiceProvider::class);
-        AliasLoader::getInstance($this->_aliases);
+        AliasLoader::getInstance($this->aliases);
     }
 }

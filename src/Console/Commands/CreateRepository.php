@@ -13,7 +13,6 @@
 
 namespace Lava83\LavaProto\Console\Commands;
 
-
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Lava83\LavaProto\Core\Generators\RepositoryEloquentGenerator;
@@ -68,7 +67,7 @@ class CreateRepository extends Command
         ]));
 
         $model = $modelGenerator->getRootNamespace().'\\'.$modelGenerator->getName();
-        $model = str_replace(["\\",'/'],'\\', $model);
+        $model = str_replace(["\\",'/'], '\\', $model);
 
         $this->generators->push(new RepositoryEloquentGenerator([
             'name'      => $this->argument('name'),
@@ -78,7 +77,7 @@ class CreateRepository extends Command
         ]));
 
 
-        foreach ( $this->generators as $generator) {
+        foreach ($this->generators as $generator) {
             $generator->run();
         }
 
@@ -110,5 +109,4 @@ class CreateRepository extends Command
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null]
         ];
     }
-
 }

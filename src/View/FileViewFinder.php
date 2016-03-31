@@ -9,6 +9,7 @@
 namespace Lava83\LavaProto\View;
 
 use \Illuminate\View\FileViewFinder as BaseFileViewFinder;
+
 class FileViewFinder extends BaseFileViewFinder
 {
 
@@ -19,7 +20,8 @@ class FileViewFinder extends BaseFileViewFinder
      * @param $location
      * @return FileViewFinder
      */
-    public function prependLocation($location) {
+    public function prependLocation($location)
+    {
         array_unshift($this->paths, $location);
         return $this;
     }

@@ -15,7 +15,7 @@ use Twig_Token;
 class ExtendsParent extends \Twig_TokenParser
 {
 
-    static $_usedPaths = [];
+    protected static $usedPaths = [];
 
     public function getTag()
     {
@@ -33,17 +33,20 @@ class ExtendsParent extends \Twig_TokenParser
         $namespace = $namespace_expr->getAttribute('value');
         foreach (array_reverse(app()['lava83.twig.loader.filesystem']->getAllPaths()) as $path_namespace => $path) {
             if (count($path) > 1) {
-                throw new TwigTokenException(sprintf('Extendsparent token parser supports only one paths. You have %d paths declared.', count($path)));
+                throw new TwigTokenException(sprintf(
+                    'Extendsparent token parser supports only one paths. You have %d paths declared.',
+                    count($path)
+                ));
             }
             $path = $path[0];
-            static::$_usedPaths[$namespace] = $path;
+            static::$usedPaths[$namespace] = $path;
 
             $complete_template_path = $path . DIRECTORY_SEPARATOR . $template;
-            if(!file_exists($complete_template_path)) {
+            if (!file_exists($complete_template_path)) {
                 continue;
             }
 
-            if ($namespace == $path_namespace || array_key_exists($path_namespace, static::$_usedPaths)) {
+            if ($namespace == $path_namespace || array_key_exists($path_namespace, static::$usedPaths)) {
                 continue;
             }
             $template_expr->setAttribute('value', '@' . $path_namespace . '/' . $template);
