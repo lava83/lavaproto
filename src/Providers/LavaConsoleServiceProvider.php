@@ -10,6 +10,10 @@ namespace Lava83\LavaProto\Providers;
 
 
 use Illuminate\Support\ServiceProvider;
+use Lava83\LavaProto\Console\Commands\CreateEntity;
+use Lava83\LavaProto\Console\Commands\CreatePresenter;
+use Lava83\LavaProto\Console\Commands\CreateRepository;
+use Lava83\LavaProto\Console\Commands\CreateTransformer;
 use Lava83\LavaProto\Console\Commands\PluginActivate;
 use Lava83\LavaProto\Console\Commands\PluginDeactivate;
 use Lava83\LavaProto\Console\Commands\PluginDeinstall;
@@ -66,28 +70,33 @@ class LavaConsoleServiceProvider extends ServiceProvider
             return new PluginDeinstall(new PluginManager(config('lava83-plugin-manager.path'), config('lava83-plugin-manager.namespaces')));
         });
 
+        $this->app->singleton('command.lava83.lavaproto.make.repository', function () {
+            return new CreateRepository();
+        });
+
+        $this->app->singleton('command.lava83.lavaproto.make.entity', function () {
+            return new CreateEntity();
+        });
+
+        $this->app->singleton('command.lava83.lavaproto.make.presenter', function () {
+            return new CreatePresenter();
+        });
+
+        $this->app->singleton('command.lava83.lavaproto.make.transformer', function () {
+            return new CreateTransformer();
+        });
+
+
         $this->commands([
             'command.lava83.lavaproto.plugins.list',
             'command.lava83.lavaproto.plugins.activate',
             'command.lava83.lavaproto.plugins.deactivate',
             'command.lava83.lavaproto.plugins.install',
-            'command.lava83.lavaproto.plugins.deinstall'
+            'command.lava83.lavaproto.plugins.deinstall',
+            'command.lava83.lavaproto.make.repository',
+            'command.lava83.lavaproto.make.entity',
+            'command.lava83.lavaproto.make.presenter',
+            'command.lava83.lavaproto.make.transformer'
         ]);
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [
-            'command.lava83.lavaproto.plugins.list',
-            'command.lava83.lavaproto.plugins.activate',
-            'command.lava83.lavaproto.plugins.deactivate',
-            'command.lava83.lavaproto.plugins.install',
-            'command.lava83.lavaproto.plugins.deinstall'
-        ];
     }
 }
