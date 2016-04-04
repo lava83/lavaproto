@@ -6,6 +6,7 @@ use Lava83\LavaProto\Core\Repositories\Eloquent;
 use Prettus\Repository\Criteria\RequestCriteria;
 use $REPOSITORY$
 use $MODEL$;
+$USE_VALIDATOR$
 
 /**
  * Class $CLASS$RepositoryEloquent
@@ -22,6 +23,8 @@ class $CLASS$RepositoryEloquent extends Eloquent implements $CLASS$Repository
     {
         return $CLASS$::class;
     }
+
+    $VALIDATOR$
 
     /**
      * Boot up the repository, pushing criteria
