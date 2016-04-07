@@ -80,19 +80,11 @@ abstract class Controller extends BaseController
      */
     public function callAction($method, $parameters)
     {
-        $this->method = $method;
-        $args = [
-            'subject' => $this
-        ];
-        notify(__CLASS__ . '_Pre', $args);
-        notify($this->controller . '_Pre', $args);
-        notify($this->controller . '_Pre::' . $this->method, $args);
+        $this->beforeCallAction($method);
 
         $this->response = parent::callAction($method, $parameters);
 
-        notify(__CLASS__ . '_Post', $args);
-        notify($this->controller . '_Post', $args);
-        notify($this->controller . '_Post::' . $this->method, $args);
+        $this->afterCallAction($method);
 
         return $this->response;
     }
@@ -154,5 +146,32 @@ abstract class Controller extends BaseController
             $oResponse->withCookie($oCookie);
         }
         return $oResponse;
+    }
+
+    /**
+     * @param $method
+     */
+    protected function beforeCallAction($method)
+    {
+        $this->method = $method;
+        $args = [
+            'subject' => $this
+        ];
+        notify(__CLASS__ . '_Pre', $args);
+        notify($this->controller . '_Pre', $args);
+        notify($this->controller . '_Pre::' . $this->method, $args);
+    }
+
+    /**
+     * @param $method
+     */
+    protected function afterCallAction($method)
+    {
+        $args = [
+            'subject' => $this
+        ];
+        notify(__CLASS__ . '_Post', $args);
+        notify($this->controller . '_Post', $args);
+        notify($this->controller . '_Post::' . $method, $args);
     }
 }
