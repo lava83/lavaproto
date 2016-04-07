@@ -16,6 +16,7 @@ namespace Lava83\LavaProto\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Lava83\LavaProto\Core\Generators\RepositoryEloquentGenerator;
+use Prettus\Repository\Generators\MigrationGenerator;
 use Prettus\Repository\Generators\ModelGenerator;
 use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -52,6 +53,12 @@ class CreateRepository extends Command
     public function fire()
     {
         $this->generators = new Collection();
+
+        $this->generators->push(new MigrationGenerator([
+            'name'   => 'create_' . str_plural(strtolower($this->argument('name'))) . '_table',
+            'fields' => $this->option('fillable'),
+            'force'  => $this->option('force'),
+        ]));
 
         $modelGenerator = new ModelGenerator([
             'name'      => $this->argument('name'),

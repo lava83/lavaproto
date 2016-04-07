@@ -17,6 +17,3 @@ before_script:
 
 script:
   - ./vendor/bin/phpcs --standard=PSR2 -p --report=full --report-checkstyle=build/logs/checkstyle.xml src/
-
-after_script:
-  - ./vendor/bin/coveralls -v

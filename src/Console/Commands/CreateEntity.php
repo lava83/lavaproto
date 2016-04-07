@@ -60,6 +60,14 @@ class CreateEntity extends Command
                 '--force' => $this->option('force'),
             ]);
         }
+
+        if ($this->confirm('Would you like to create a Validator? [y|N]')) {
+            $this->call('make:validator', [
+                'name'    => $this->argument('name'),
+                '--rules' => $this->option('rules'),
+                '--force' => $this->option('force'),
+            ]);
+        }
     }
 
     /**
