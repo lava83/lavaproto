@@ -14,6 +14,8 @@ matrix:
 before_script:
   - composer self-update
   - composer install --no-interaction --prefer-source --dev
+  - mkdir -p ./build/logs
+  - touch ./build/logs/checkstyle.xml
 
 script:
   - ./vendor/bin/phpcs --standard=PSR2 -p --report=full --report-checkstyle=build/logs/checkstyle.xml src/
