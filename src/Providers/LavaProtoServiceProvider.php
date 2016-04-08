@@ -10,6 +10,7 @@ namespace Lava83\LavaProto\Providers;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Laracasts\Utilities\JavaScript\JavaScriptServiceProvider;
 use Lava83\LavaProto\Exceptions\LogicException;
 use Lava83\LavaProto\Repositories\UserRepository;
 use Lava83\LavaProto\Repositories\UserRepositoryEloquent;
@@ -40,6 +41,7 @@ class LavaProtoServiceProvider extends ServiceProvider
         $this->app->register(LavaTwigServiceProvider::class);
         $this->app->register(LavaPluginServiceProvider::class);
         $this->app->register(LavaConsoleServiceProvider::class);
+        $this->app->register(JavaScriptServiceProvider::class);
         /** @todo LavaRepositoryServiceProvider */
         $this->app->register(RepositoryServiceProvider::class);
         $this->bindRepositories();
