@@ -67,6 +67,9 @@ abstract class Controller extends BaseController
         ];
         notify(__CLASS__ . '_Init_Post', $args);
         notify($this->controller . '_Init_Post', $args);
+        \JavaScript::put([
+            'baseurl' => url('')
+        ]);
     }
 
     /**
