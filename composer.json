@@ -9,14 +9,19 @@
         "league/fractal": "^0.13.0",
         "robclancy/presenter": "^1.3",
         "prettus/laravel-validation": "^1.1",
-        "laracasts/utilities": "~2.0"
+        "laracasts/utilities": "~2.0",
+        "twig/extensions": "^1.3",
+        "intervention/image": "^2.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
         "squizlabs/php_codesniffer": "2.*",
-        "satooshi/php-coveralls": "~1.0"
+        "satooshi/php-coveralls": "~1.0",
+        "barryvdh/laravel-ide-helper": "^2.1",
+        "doctrine/dbal": "^2.5",
+        "barryvdh/laravel-debugbar": "2.1.*"
     },
     "autoload": {
         "files": [
