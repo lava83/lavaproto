@@ -8,8 +8,13 @@
 
 namespace Lava83\LavaProto\Providers;
 
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceprovider;
+use Barryvdh\Debugbar\Facade as DebugBarFacade;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageServiceProvider;
 use Laracasts\Utilities\JavaScript\JavaScriptServiceProvider;
 use Lava83\LavaProto\Exceptions\LogicException;
 use Lava83\LavaProto\Repositories\UserRepository;
@@ -34,17 +39,26 @@ class LavaProtoServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if (in_array(config('cache.default'), ['file', 'database'])) {
-            throw new LogicException('We use tagable caches. PLease dont use file or database as driver!');
-        }
-
         $this->app->register(LavaTwigServiceProvider::class);
         $this->app->register(LavaPluginServiceProvider::class);
         $this->app->register(LavaConsoleServiceProvider::class);
         $this->app->register(JavaScriptServiceProvider::class);
         /** @todo LavaRepositoryServiceProvider */
         $this->app->register(RepositoryServiceProvider::class);
+        $this->app->register(ImageServiceProvider::class);
+        $this->app->alias('Image', Image::class);
         $this->bindRepositories();
+        $this->registerDev();
+    }
+
+    protected function registerDev()
+    {
+        $env = $this->app->environment();
+        if (in_array($env, ['dev', 'local'])) {
+            $this->app->register(IdeHelperServiceProvider::class);
+            $this->app->register(DebugBarServiceprovider::class);
+            $this->app->alias('Debugbar', DebugBarFacade::class);
+        }
     }
 
     protected function bindRepositories()
