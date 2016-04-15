@@ -49,6 +49,7 @@ class LavaProtoServiceProvider extends ServiceProvider
         $this->app->alias('Image', Image::class);
         $this->bindRepositories();
         $this->registerDev();
+        \Locale::setDefault(config('app.locale'));
     }
 
     protected function registerDev()
