@@ -29,7 +29,7 @@ class CronToRun implements CriteriaInterface
     {
         $model = $model->where('active', true)
             ->whereNull('start')
-            ->whereDate('next', '<=', new Carbon);
+            ->where('next', '<', new Carbon);
         return $model;
     }
 
