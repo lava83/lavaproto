@@ -17,6 +17,8 @@ use Intervention\Image\Facades\Image;
 use Intervention\Image\ImageServiceProvider;
 use Laracasts\Utilities\JavaScript\JavaScriptServiceProvider;
 use Lava83\LavaProto\Exceptions\LogicException;
+use Lava83\LavaProto\Repositories\CronRepository;
+use Lava83\LavaProto\Repositories\CronRepostitoryEloquent;
 use Lava83\LavaProto\Repositories\UserRepository;
 use Lava83\LavaProto\Repositories\UserRepositoryEloquent;
 use Prettus\Repository\Providers\RepositoryServiceProvider;
@@ -54,12 +56,12 @@ class LavaProtoServiceProvider extends ServiceProvider
 
     protected function registerDev()
     {
-        $env = $this->app->environment();
+        /*$env = $this->app->environment();
         if (in_array($env, ['dev', 'local'])) {
             $this->app->register(IdeHelperServiceProvider::class);
             $this->app->register(DebugBarServiceprovider::class);
             $this->app->alias('Debugbar', DebugBarFacade::class);
-        }
+        }*/
     }
 
     protected function bindRepositories()
@@ -80,5 +82,6 @@ class LavaProtoServiceProvider extends ServiceProvider
             }
         }
         $this->app->bind(UserRepository::class, UserRepositoryEloquent::class);
+        $this->app->bind(CronRepository::class, CronRepostitoryEloquent::class);
     }
 }

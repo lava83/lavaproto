@@ -8,6 +8,7 @@
 
 namespace Lava83\LavaProto\Console\Commands;
 
+use Symfony\Component\Console\Helper\Table;
 use Illuminate\Console\Command;
 use Lava83\LavaProto\Core\Plugins\PluginBootstrap;
 
@@ -42,18 +43,22 @@ class PluginList extends Command
         /** @var $plugin PluginBootstrap */
         \PluginManager::sync();
         if ($collection = \PluginManager::getPluginCollection() and count($collection) > 0) {
+            /** @var Table $table */
+            $table = new Table($this->getOutput());
+            $table->setHeaders(['name', 'version', 'description', 'active', 'installed']);
+            $rows = [];
+
             foreach ($collection as $plugin) {
-                $active = ($plugin->isActive()) ? 'yes' : 'no';
-                $installed = ($plugin->isInstalled()) ? 'yes' : 'no';
-                $line = <<<EOF
-<comment>{$plugin->getName()}:</comment>
-    <info>version: {$plugin->getVersion()}</info>
-    <info>description: {$plugin->getDescription()}</info>
-    <info>active: {$active}</info>
-    <info>installed: {$installed}</info>
-EOF;
-                $this->line($line);
+                $rows[] = [
+                    $plugin->getName(),
+                    $plugin->getVersion(),
+                    $plugin->getDescription(),
+                    ($plugin->isActive()) ? 'yes' : 'no',
+                    ($plugin->isInstalled()) ? 'yes' : 'no'
+                ];
             }
+            $table->setRows($rows);
+            $table->render();
         } else {
             $line = <<<EVO
 <info>no plugins avalaible</info>

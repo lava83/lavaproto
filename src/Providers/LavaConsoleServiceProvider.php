@@ -13,6 +13,8 @@ use Lava83\LavaProto\Console\Commands\CreateEntity;
 use Lava83\LavaProto\Console\Commands\CreatePresenter;
 use Lava83\LavaProto\Console\Commands\CreateRepository;
 use Lava83\LavaProto\Console\Commands\CreateTransformer;
+use Lava83\LavaProto\Console\Commands\CronList;
+use Lava83\LavaProto\Console\Commands\CronRun;
 use Lava83\LavaProto\Console\Commands\PluginActivate;
 use Lava83\LavaProto\Console\Commands\PluginDeactivate;
 use Lava83\LavaProto\Console\Commands\PluginDeinstall;
@@ -101,6 +103,14 @@ class LavaConsoleServiceProvider extends ServiceProvider
             return new CreateTransformer();
         });
 
+        $this->app->singleton('command.lava83.lavaproto.cron.list', function () {
+           return new CronList();
+        });
+
+        $this->app->singleton('command.lava83.lavaproto.cron.run', function () {
+            return new CronRun();
+        });
+
 
         $this->commands([
             'command.lava83.lavaproto.plugins.list',
@@ -111,7 +121,9 @@ class LavaConsoleServiceProvider extends ServiceProvider
             'command.lava83.lavaproto.make.repository',
             'command.lava83.lavaproto.make.entity',
             'command.lava83.lavaproto.make.presenter',
-            'command.lava83.lavaproto.make.transformer'
+            'command.lava83.lavaproto.make.transformer',
+            'command.lava83.lavaproto.cron.list',
+            'command.lava83.lavaproto.cron.run'
         ]);
     }
 }
