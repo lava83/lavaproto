@@ -17,7 +17,7 @@ use Illuminate\Console\Command as BaseCommand;
 
 class Command extends BaseCommand
 {
-    public function showLine($line) 
+    public function showLine($line)
     {
         $this->line($line);
     }

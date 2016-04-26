@@ -13,7 +13,6 @@
 
 namespace Lava83\LavaProto\Criterias;
 
-
 use Carbon\Carbon;
 use Lava83\LavaProto\Entities\Cron;
 use Prettus\Repository\Contracts\CriteriaInterface;
@@ -32,5 +31,4 @@ class CronToRun implements CriteriaInterface
             ->where('next', '<', new Carbon);
         return $model;
     }
-
 }
