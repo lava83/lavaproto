@@ -13,7 +13,6 @@
 
 namespace Lava83\LavaProto\Core\Cron;
 
-
 use Symfony\Component\Console\Output\Output;
 
 abstract class Bootstrap
@@ -34,5 +33,4 @@ abstract class Bootstrap
     }
 
     abstract public function run();
-
 }

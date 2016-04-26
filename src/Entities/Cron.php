@@ -58,7 +58,8 @@ class Cron extends Model implements Transformable
         $this->save();
     }
 
-    public function finish($data = []) {
+    public function finish($data = [])
+    {
         $this->fill([
             'start' => null,
             'end' => new Carbon,
@@ -68,7 +69,7 @@ class Cron extends Model implements Transformable
         $this->save();
     }
 
-    public function finishFailed($data = []) 
+    public function finishFailed($data = [])
     {
         $this->fill([
             'start' => null,
@@ -78,5 +79,4 @@ class Cron extends Model implements Transformable
         ]);
         $this->save();
     }
-
 }

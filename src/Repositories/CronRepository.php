@@ -13,12 +13,9 @@
 
 namespace Lava83\LavaProto\Repositories;
 
-
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 interface CronRepository extends RepositoryInterface
 {
-
     public function findAllToRun();
-
 }
