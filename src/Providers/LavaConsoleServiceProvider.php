@@ -104,7 +104,7 @@ class LavaConsoleServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('command.lava83.lavaproto.cron.list', function () {
-           return new CronList();
+            return new CronList();
         });
 
         $this->app->singleton('command.lava83.lavaproto.cron.run', function () {
