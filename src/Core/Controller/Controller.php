@@ -21,6 +21,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\Factory;
 use Lava83\LavaProto\View\View;
 use Prettus\Repository\Contracts\RepositoryInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 
 abstract class Controller extends BaseController
 {
@@ -90,6 +91,26 @@ abstract class Controller extends BaseController
         $this->afterCallAction($method);
 
         return $this->response;
+    }
+
+    /**
+     * @param Cookie $cookie
+     * @return $this
+     */
+    public function addCookie(Cookie $cookie)
+    {
+        $this->cookies[] = $cookie;
+        return $this;
+    }
+
+    /**
+     * @param array $cookies
+     * @return $this
+     */
+    public function setCookies(array $cookies)
+    {
+        $this->cookies = $cookies;
+        return $this;
     }
 
     /**
