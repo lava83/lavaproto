@@ -163,13 +163,16 @@ abstract class Controller extends BaseController
      */
     public function view($sViewName, array $aData = [])
     {
-        $oView = $this->view->make($sViewName, $aData);
-        $oResponse = \Response::make($oView);
-        $this->cookies = [];
-        foreach ($this->cookies as $oCookie) {
-            $oResponse->withCookie($oCookie);
+        $view = $this->view->make($sViewName, $aData);
+        $response = \Response::make($view);
+
+        if ($cookies = $this->getCookies()) {
+            foreach ($cookies as $cookie) {
+                $response->withCookie($cookie);
+            }
         }
-        return $oResponse;
+
+        return $response;
     }
 
     /**
