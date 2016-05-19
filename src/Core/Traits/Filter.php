@@ -15,11 +15,18 @@ namespace Lava83\LavaProto\Core\Traits;
 
 trait Filter
 {
+    public function addFilter($key, $filter)
+    {
+        $this->filter[$key][] = $filter;
+    }
+
     public function setAttribute($key, $value)
     {
         if (isset($this->filter) && isset($this->filter[$key])) {
             foreach ($this->filter[$key] as $filter) {
-                $value = $filter($value);
+                if (is_callable($filter)) {
+                    $value = $filter($value);
+                }
             }
         }
         parent::setAttribute($key, $value);
