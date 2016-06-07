@@ -23,7 +23,7 @@ class UserRepositoryEloquent extends Eloquent implements UserRepository
      */
     public function model()
     {
-        return User::class;
+        return config('auth.providers.users.model');
     }
 
     
