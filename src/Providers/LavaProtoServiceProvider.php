@@ -76,7 +76,7 @@ class LavaProtoServiceProvider extends ServiceProvider
                     $interfaceName = $rootNamespace . 'Repositories\\' . $className;
                     $classNameEloquent = $rootNamespace . 'Repositories\\' . $className . 'Eloquent';
                     if (interface_exists($interfaceName)) {
-                        $this->app->bind($interfaceName, $classNameEloquent);
+                        $this->app->bindIf($interfaceName, $classNameEloquent);
                     }
                 }
             }
