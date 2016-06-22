@@ -7,7 +7,6 @@
 namespace Lava83\LavaProto\Repositories;
 
 use Lava83\LavaProto\Core\Repositories\Eloquent;
-use Lava83\LavaProto\Entities\User;
 use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
