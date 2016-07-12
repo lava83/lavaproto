@@ -81,7 +81,7 @@ class LavaProtoServiceProvider extends ServiceProvider
                 }
             }
         }
-        $this->app->bind(UserRepository::class, UserRepositoryEloquent::class);
-        $this->app->bind(CronRepository::class, CronRepostitoryEloquent::class);
+        $this->app->bindIf(UserRepository::class, UserRepositoryEloquent::class);
+        $this->app->bindIf(CronRepository::class, CronRepostitoryEloquent::class);
     }
 }
