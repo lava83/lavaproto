@@ -11,6 +11,7 @@ namespace Lava83\LavaProto\Providers;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceprovider;
 use Barryvdh\Debugbar\Facade as DebugBarFacade;
+use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Facades\Image;
@@ -25,6 +26,8 @@ use Prettus\Repository\Providers\RepositoryServiceProvider;
 
 class LavaProtoServiceProvider extends ServiceProvider
 {
+
+    use AppNamespaceDetectorTrait;
 
     public function boot()
     {
@@ -69,7 +72,7 @@ class LavaProtoServiceProvider extends ServiceProvider
         if (config('lava83-repositories.auto-bind-eloquent')) {
             $repositoriesPath = config('repository.generator.basePath') . DIRECTORY_SEPARATOR .
                 config('repository.generator.paths.repositories');
-            $rootNamespace = config('repository.generator.rootNamespace');
+            $rootNamespace = $this->getAppNamespace();
             if ($repositories = glob($repositoriesPath . DIRECTORY_SEPARATOR . '*Repository.php')) {
                 foreach ($repositories as $repository) {
                     $className = basename($repository, '.php');
