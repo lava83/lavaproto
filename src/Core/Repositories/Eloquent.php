@@ -15,6 +15,9 @@ namespace Lava83\LavaProto\Core\Repositories;
 
 use Illuminate\Container\Container as Application;
 use Prettus\Repository\Eloquent\BaseRepository as BaseEloquentRepository;
+use Prettus\Repository\Events\RepositoryEntityCreated;
+use Prettus\Repository\Events\RepositoryEntityUpdated;
+use Prettus\Validator\Contracts\ValidatorInterface;
 
 abstract class Eloquent extends BaseEloquentRepository
 {
@@ -51,6 +54,69 @@ abstract class Eloquent extends BaseEloquentRepository
     public function create(array $attributes)
     {
         return $this->fireParentMethodAndNotify([$attributes], 'create');
+    }
+
+    public function forceCreate(array $attributes) {
+        $args = [
+            'subject' => $this
+        ];
+        $this->notifyPreEvents($args, 'create');
+
+        if (!is_null($this->validator)) {
+            // we should pass data that has been casts by the model
+            // to make sure data type are same because validator may need to use
+            // this data to compare with data that fetch from database.
+            $attributes = $this->model->newInstance()->forceFill($attributes)->toArray();
+
+            $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
+        }
+
+        $model = $this->model->newInstance();
+        $model->forceFill($attributes);
+        $model->save();
+        $this->resetModel();
+        event(new RepositoryEntityCreated($this, $model));
+        $ret = $this->parserResult($model);
+        $args = array_merge($args, ['ret' => $ret]);
+        $this->notifyPostEvents($args, 'create');
+        return $ret;
+    }
+
+    public function forceUpdate(array $attributes, $id) {
+        $args = [
+            'subject' => $this
+        ];
+        $this->notifyPreEvents($args, 'update');
+
+        $this->applyScope();
+
+        if (!is_null($this->validator)) {
+            // we should pass data that has been casts by the model
+            // to make sure data type are same because validator may need to use
+            // this data to compare with data that fetch from database.
+            $attributes = $this->model->newInstance()->forceFill($attributes)->toArray();
+
+            $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+        }
+
+        $temporarySkipPresenter = $this->skipPresenter;
+
+        $this->skipPresenter(true);
+
+        $model = $this->model->findOrFail($id);
+        $model->forceFill($attributes);
+        $model->save();
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+        event(new RepositoryEntityUpdated($this, $model));
+
+        $ret = $this->parserResult($model);
+
+        $args = array_merge($args, ['ret' => $ret]);
+        $this->notifyPostEvents($args, 'update');
+        return $ret;
     }
 
     /**
